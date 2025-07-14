@@ -30,7 +30,7 @@ function ProductDetailDescription({ currentVariant, Data }: any) {
       setDescriptionHTML(htmlData);
     }
   }, [currentVariant]);
-  console.log(currentVariant, 'currentVariant')
+
   return (
     <div className={styles.navbarContainer}>
       <ul className={styles.navList}>

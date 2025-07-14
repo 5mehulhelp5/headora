@@ -62,19 +62,21 @@
 .cartegoryHeadeBreadcrumbs span {
   text-decoration: none;
   text-transform: capitalize;
+  color: #a29253;
+  font-size: 10px;
 }
 
 .cartegoryHeadeBreadcrumbs a {
-  color: #000000;
+  color: #a29253;
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 10px;
 
   cursor: pointer;
   text-transform: capitalize;
 
   @media screen and (max-width: 650px) {
-    font-size: 14px;
+    font-size: 10px;
 
   }
 }
@@ -87,15 +89,16 @@
   text-align: center;
 
   color: rgb(0, 0, 0);
-  padding: 0px 20px 40px 20px;
+  padding: 0px 20px 0px 20px;
 
 }
 
 .contentContainer h1 {
   font-size: 24px;
   font-weight: 400;
-  margin-bottom: 15px;
+  margin: 20px;
   font-family: var(--SourceSerifPro);
+
 }
 
 .contentContainer p {
@@ -166,8 +169,8 @@
   display: flex;
   gap: 20px;
   padding: 0px 15px;
-  border: #000 solid 1px;
-  border-radius: 5px;
+  border: 1px solid #a29253;
+  border-radius: 0px;
 }
 
 .sortList span {
@@ -415,11 +418,11 @@
   display: flex;
   justify-content: center;
   border: 1px solid #1f1f1f;
-  border-radius: 20px;
+  border-radius: 0px;
 }
 
 .MobileFilterNavbarItem button {
-  padding: 10px 10px;
+  padding: 5px 20px;
   color: #000;
   background: none;
   border: none;
@@ -457,8 +460,8 @@
 
 .filterHeader h4 {
   font-size: 20px;
-  font-family: var(--SourceSerifPro);
   font-weight: 600;
+  letter-spacing: 1px;
 
   @media screen and (max-width: 1000px) {
     font-size: 18px;
@@ -494,20 +497,26 @@
   cursor: pointer;
 }
 
-.MobileProductCount {
+.MobileProductCount p {
   font-size: 14px;
   text-align: center;
   padding-bottom: 10px;
+
+  @media screen and (max-width: 1000px) {
+    font-size: 12px;
+    line-height: 1.7;
+
+  }
 }
 
 /* Group title */
 .filterGroupTitle {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   padding: 20px 0;
   text-transform: uppercase;
   color: #333;
-  font-family: var(--SourceSerifPro);
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -530,13 +539,15 @@
 
 /* Individual option styles */
 .filterOption {
+  font-family: var(--Secondary);
   display: flex;
   align-items: flex-start;
   line-height: 16px;
-  font-size: 16px;
+  font-size: 14px;
   color: #111827;
   cursor: pointer;
   align-items: center;
+
   @media screen and (max-width: 1000px) {
     font-size: 12px;
     line-height: 12px;
@@ -562,10 +573,10 @@
   border-radius: 3px;
   border: 2px solid #111827;
   display: inline-grid;
-  height: 22px;
-  min-width: 22px;
+  height: 20px;
+  min-width: 20px;
   top: 1px;
-  width: 22px;
+  width: 20px;
   cursor: pointer;
   position: relative;
 
@@ -682,20 +693,22 @@
 
 .sortList {
   position: relative;
-
+  font-size: 11px;
+  letter-spacing: 1px;
   cursor: pointer;
 
 }
 
 .sortDropdown {
   position: absolute;
-  top: 40px;
+  top: 34px;
   right: 0px;
   background-color: white;
   border: 1px solid #ddd;
   width: 225px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
+  font-family: var(--Secondary);
 }
 
 .sortDropdown ul {
@@ -723,6 +736,7 @@
   font-size: 14px;
   font-weight: 400;
   align-items: center;
+  letter-spacing: 0px;
 
   @media screen and (max-width:1000px) {
     gap: 0px;
@@ -745,6 +759,9 @@
   width: 100%;
   max-width: 1440px;
   margin: auto;
+  display: flex;
+
+  background-color: #ffffff;
 
   @media screen and (max-width:1000px) {
     padding: 0;
@@ -753,10 +770,20 @@
 
 }
 
-.allProductContainer {
+.allSearchProductContainer {
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
   display: flex;
-
+  justify-content: center;
   background-color: #ffffff;
+
+  @media screen and (max-width:1000px) {
+    padding: 0;
+
+  }
+
 }
 
 .filterContainer {
@@ -777,52 +804,182 @@
   }
 }
 
+.SearchProducts {
+  width: 70%;
+
+  @media screen and (max-width:1000px) {
+    width: 100%;
+    padding: 40px 10px;
+  }
+}
+
 .watchGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
 }
 
+.SearchWatchGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+
+  @media screen and (min-width:650px) and (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+
+  }
+
+  @media screen and (max-width: 650px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+  }
+}
+
 .watchItem {
   background-color: white;
   display: flex;
   flex-direction: column;
-
+  position: relative;
   text-align: center;
   cursor: pointer;
   color: #000;
   text-decoration: none;
   gap: 5px;
   font-size: 14px;
-  align-items: flex-start;
+  align-items: center;
 }
 
+.watchItem:hover {
+  border: 1px solid #a29253;
+  border-bottom: none;
+
+  @media screen and (max-width: 1000px) {
+    border-bottom: 1px solid #a29253;
+
+  }
+}
+
+.watchItem.search {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+ color: rgba(102, 102, 102, 0.9);
+  text-decoration: none;
+  gap: 5px;
+  font-size: 14px;
+  font-family: var(--sansSerif);
+  align-items: center;
+}
+
+.watchItem.search:hover {
+  border: 1px solid #a29253;
+}
+
+.watchItem:hover {
+  .addToCartButton {
+    color: #a29253;
+    border: 1px solid #a29253;
+    border-right: none;
+    border-left: none;
+  }
+}
+
+.watchItem:hover {
+  .addToCartButton:hover {
+    color: #fff;
+    background-color: #a29253;
+
+  }
+}
 
 .watchItem img:hover {
   transform: scale(1.01);
 }
 
 .watchItem img {
-  max-width: 100%;
+  max-width: 98%;
+  margin: auto;
   height: auto;
   aspect-ratio: 3 / 4;
   object-fit: scale-down;
 }
 
 .watchItem span {
-  font-size: 16px;
+  font-size: 14px;
+  text-transform: capitalize;
+  letter-spacing: 0.036em;
+  color: rgba(102, 102, 102, 0.9);
   padding: 0 5px;
   line-height: 22px;
-  margin-top: 14px;
-  font-weight: 600;
+  font-family: var(--sansSerif);
+  font-weight: 500;
 
 }
 
-.watchItem p {
+.saleTag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #a29253;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
   font-weight: bold;
+  z-index: 2;
+  border-radius: 1px;
+  text-transform: uppercase;
 
+  @media screen and (max-width: 1000px) {
+    font-size: 10px;
+    padding: 2px 4px
+  }
+}
+
+.price span {
   font-size: 14px;
-  line-height: 24px;
+  line-height: 22px;
+  font-weight: 500;
+
+}
+
+.brandName {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: var(--Muli);
+  color: #4c4d4fe6;
+  display: inline-block;
+
+  font-size: 9px;
+  height: 1.2em;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.4em;
+  vertical-align: baseline;
+  width: auto;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+
+  @media screen and (max-width: 1000px) {
+    font-size: 8px;
+
+  }
+
+}
+
+.conditionName {
+  display: block;
+  color: #a29253;
+  font-family: var(--Muli);
+  font-size: 11px;
+  text-transform: uppercase;
 }
 
 .featuredImage {
@@ -840,20 +997,24 @@
 
 .price {
   color: #111827;
+  font-family: var(--Secondary);
 }
 
 .price span {
   text-decoration: none;
   font-weight: 300;
+  font-family: var(--Secondary);
+
 }
 
 .price span.regular {
   font-size: 14px;
-  color: #6B0100;
+  color: #a29253;
   text-decoration: line-through;
+  font-family: var(--Secondary);
 
   @media screen and (max-width:650px) {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
@@ -869,23 +1030,21 @@
 .addToCartButton {
   padding: 7px;
   color: #fff;
-  border: 1px solid #2954ff;
+  border: 1px solid #fff;
   cursor: pointer;
   text-transform: uppercase;
   font-size: 14px;
   z-index: 1;
-  background-color: #2954ff;
-  width: 75%;
+  background-color: unset;
+  width: 100%;
   text-align: center;
-
   text-decoration: none;
-  border-radius: 25px;
 }
 
-.addToCartButton:hover {
-  background-color: rgb(32, 71, 180);
-  color: #fff;
-}
+/* .addToCartButton:hover {
+  color: #a29253;
+  border: 1px solid #a29253;
+} */
 
 /*========================================= Discount Block Section ======================================= */
 
@@ -978,65 +1137,149 @@
 
   text-align: center;
   text-transform: capitalize;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-/* =============================================================Content Description========================================================== */
 .descriptionContainer {
-  padding: 20px 0;
-  margin: 0 auto;
-  width: 93%;
+  max-width: 1440px;
+  margin: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.content h3 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 15px;
-  font-family: var(--SourceSerifPro);
+.WishListIconWrraper {
+  position: absolute;
+  right: 10px;
+  top: 5px;
 }
 
-/* Styling for paragraphs */
-.content p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 20px;
 
-  @media screen and (max-width:650px) {
+.SearchLoader {
+  width: 25px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid #a29253;
+  animation:
+    l20-1 0.8s infinite linear alternate,
+    l20-2 1.6s infinite linear;
+}
+
+
+@keyframes l20-1 {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%)
+  }
+
+  12.5% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%)
+  }
+
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%)
+  }
+
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  62.5% {
+    clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  75% {
+    clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%)
+  }
+
+  100% {
+    clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%)
+  }
+}
+
+@keyframes l20-2 {
+  0% {
+    transform: scaleY(1) rotate(0deg)
+  }
+
+  49.99% {
+    transform: scaleY(1) rotate(135deg)
+  }
+
+  50% {
+    transform: scaleY(-1) rotate(0deg)
+  }
+
+  100% {
+    transform: scaleY(-1) rotate(-135deg)
+  }
+}
+
+.loadingContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+
+}
+
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  font-family: var(--Muli);
+  letter-spacing: 2px;
+  font-size: 16px;
+  padding-bottom: 8px;
+  background: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
+  animation: l2 2s linear infinite;
+  text-transform: uppercase;
+  color: #515151;
+
+  @media screen and (max-width:1000px) {
     font-size: 12px;
   }
 
 }
 
-/* Styling for bold text */
-.content strong {
-  font-weight: 700;
-  color: #000;
-
+.loader:before {
+  content: "Loading..."
 }
 
-/* Add spacing between elements */
-.content p+p {
-  margin-top: 10px;
-
+@keyframes l2 {
+  to {
+    background-size: 100% 3px;
+  }
 }
 
-/* Show more/less toggle */
-.showToggle {
-  display: inline-block;
-  margin-top: 10px;
-  color: #686868;
-  cursor: pointer;
-  font-weight: 500;
-
-  text-decoration: none;
+.SearchProductsFullWidth {
+  width: 100%;
 }
 
-.showToggle:hover {
-  color: #D4A902;
+.smallBannerWrapper {
+  margin: 20px 0;
+  width: 47%;
+  display: flex;
+  justify-content: center;
+
+  @media screen and (min-width: 650px) and (max-width: 1000px) {
+    width: 100%;
+  }
 }
 
+.smallBannerImage {
+  border-radius: 2px;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
 
 /* ==================================================================Media Query============================================================= */
 
@@ -1061,6 +1304,7 @@
     display: block;
   }
 
+  .allSearchProductContainer,
   .allProductContainer {
     padding: 60px 0px;
   }
@@ -1104,7 +1348,7 @@
 
 
   .contentContainer {
-    padding: 10px;
+    padding: 0px 10px;
   }
 
   .cartegoryHeaderContainer {
@@ -1117,13 +1361,15 @@
   }
 
   .contentContainer h1 {
-    font-size: 25px;
+    font-size: 18px;
+    margin-bottom: 10px;
   }
 
 
   /* ===================Products================ */
   .watchItem span {
-    font-size: 14px;
+    font-size: 10px;
+    line-height: 14px;
   }
 
   /* =======Filter======= */

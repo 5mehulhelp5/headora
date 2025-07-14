@@ -1,0 +1,332 @@
+.navBarSpace {
+    width: 100%;
+    height: 70px;
+ 
+
+    @media screen and (max-width: 1000px) {
+        height: 90px;
+    }
+}
+
+.container {
+    background-color: white;
+    padding: 0 0px 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.headerSection {
+    background-color: #1f2937;
+    text-align: center;
+    padding: 4rem 1rem;
+    padding-top: 110px;
+    @media screen and (max-width:1000px) {
+        padding: 20px;
+    }
+
+}
+
+.headerTitle {
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-family: var(--SourceSerifPro);
+}
+
+.headerSubtitle {
+    color: #f87171;
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+}
+
+.headerText {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #585858;
+}
+
+
+/* Banner section */
+.sizing_banner {
+    background-color: #1f2937;
+    text-align: center;
+    padding: 4rem 1rem;
+    padding-top: 110px;
+  }
+  
+  /* .sizing_sec {
+    max-width: 1440px;
+    margin: 0 auto;
+  } */
+  
+  .listHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .line {
+    height: 1px;
+    width: 4rem;
+    background-color: #9ca3af;
+  }
+  
+  .listHeader p {
+    color: #e5e7eb;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .sizing_banner h4 {
+    color: #f87171;
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  
+  .sizing_banner p {
+    color: #d1d5db;
+  }
+  
+
+
+
+
+
+
+
+
+.contactSection {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.contactInfo {
+    flex: 1;
+    margin-right: 40px;
+    margin-left: 20px;
+}
+
+.contactTitle {
+    color: #666666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.contactEmail {
+    color: #0066cc;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.contactEmail:hover {
+    text-decoration: underline;
+}
+
+.businessHours {
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.formSection {
+  width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
+    @media screen and (max-width:1000px) {
+        width: 100%;
+        padding: 10px;
+    }
+}
+.inputWrapper{
+    display: flex;
+    gap: 10px;
+    @media screen and (max-width:1000px) {
+        gap:unset;
+    flex-direction: column;
+    }
+}
+.formTitle {
+    font-size: 20px;
+    color: #333333;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+
+    font-family: var(--SourceSerifPro);
+}
+
+.inputField {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.messageField {
+    composes: inputField;
+    height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    resize: none;
+    font-family: var(--Secondary);
+}
+
+.submitButton {
+    background-color: unset;
+
+    color: #d4a902;
+    padding: 12px 30px;
+    border: 1px solid #d4a902;
+    border-radius: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    color: white;
+    background-color: #d4a902;
+}
+
+.contactWrapper {
+    display: flex;
+    max-width: 1440px;
+    margin: auto;
+    padding: 40px 0;
+    @media screen and (max-width:1000px) {
+        flex-direction: column;
+align-items: center;
+text-align: center;
+justify-content: center;   
+gap: 20px;
+padding: 20px 0;
+ }
+}
+
+.faqNavbar {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    @media screen and (max-width:1000px) {
+        display: none;
+        
+    }
+}
+
+.faqNavbar span {
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.faqNavbar span:hover {
+    text-decoration: underline  ;
+}
+
+/* ==================================FAQ Discription ===========================================*/
+/* Faq.module.css */
+
+.faqContainer {
+    max-width: 1440px;
+    margin: 20px auto 40px;
+    padding: 20px;
+    border-radius: 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: #333;
+    @media screen and (max-width:1000px) {
+        margin: 20px auto 20px;
+
+        
+    }
+}
+
+.mainHeading {
+    color: #e5e7eb;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.successMessage{
+    color: #333;
+    font-family: 14px;
+    padding-top: 10px;
+}
+@media screen and (max-width: 1000px) {
+    .mainHeading {
+        font-size: 22px;
+    }
+}
+
+.sectionHeading {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.sectionTitle {
+    background: white;
+    padding: 0 20px;
+    display: inline-block;
+    position: relative;
+    border-radius: 3px;
+    z-index: 1;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    color: #444;
+    line-height: 1.6;
+    font-family: var(--SourceSerifPro);
+    font-size: 24px;
+}
+
+@media screen and (max-width: 1000px) {
+    .sectionTitle {
+        font-size: 18px;
+        padding: 0 20px;
+    }
+}
+
+.dividerLine {
+    border-top: 1px solid #ccc;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 0;
+}
+
+.contentParagraph {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 14px;
+    text-align: justify;
+}
+
+.disclaimer {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .contactSection {
+        flex-direction: column;
+    }
+
+    .contactInfo {
+        margin-right: 0;
+        margin-bottom: 30px;
+    }
+}

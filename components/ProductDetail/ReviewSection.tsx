@@ -46,7 +46,7 @@ function ReviewSection({ Data, AllReviews }: any) {
     const ValueValue = reviewRatings[ValueLabel]?.valueId || "";
     const PriceLabel = Object.keys(reviewRatings)[2] || "";
     const PriceValue = reviewRatings[PriceLabel]?.valueId || "";
-
+    //console.log('fetchReviewSection')
     const response = await client.fetchReviewSection(
       SKU,
       reviewNickname,

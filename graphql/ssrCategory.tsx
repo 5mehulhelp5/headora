@@ -4,6 +4,7 @@ query {
   items{
 uid
     url_key
+     url_path
     level
     children{
       products{
@@ -12,6 +13,7 @@ uid
       }
     }
      url_key
+     url_path
         name
         level
        uid
@@ -22,6 +24,7 @@ uid
       }
     }
       url_key
+     url_path
         name
         level
        uid
@@ -32,6 +35,7 @@ uid
       }
     }
         url_key
+     url_path
         level
         name
        uid

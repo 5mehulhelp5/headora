@@ -1,6 +1,6 @@
-const GET_CMS_PAGE = `
+const GET_CMS_PAGE = (identifier: any)=> `
 query GetCmsPage {
-        cmsPage(identifier: "home-page-next") {
+        cmsPage(identifier: "${identifier}") {
             url_key
             content
             content_heading

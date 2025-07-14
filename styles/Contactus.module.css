@@ -1,0 +1,135 @@
+.freeSpace{
+    height: 70px;
+}
+.container {
+    max-width: 1440px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111827;
+    color: white;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.heroContent h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.heroContent p {
+    font-size: 1.2rem;
+}
+
+.heroUnderline {
+    width: 50px;
+    height: 3px;
+    background-color: #a29253;
+    margin-top: 10px;
+}
+
+.heroImage img {
+    max-width: 250px;
+    border-radius: 8px;
+}
+
+/* Contact Form Section */
+.contactSection {
+    display: flex;
+    margin-top: 40px;
+    gap: 50px;
+}
+
+.contactForm {
+    flex: 1;
+}
+
+.contactForm h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.contactForm p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.contactForm label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 10px;
+}
+
+.contactForm input, 
+.contactForm textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.contactForm textarea {
+    height: 100px;
+    resize: none;
+}
+
+.optional {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.sendButton {
+    margin-top: 20px;
+    background-color: #a29253;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.sendButton:hover {
+    background-color: #85794c;
+}
+
+/* Contact Details */
+.contactDetails {
+    flex: 1;
+}
+
+.detailItem {
+    margin-bottom: 30px;
+    display: flex
+;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detailItem h3 {
+    font-size: 1.5rem;
+}
+
+.detailItem p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.detailItem a {
+    text-decoration: none;
+    color: #a29253;
+    font-weight: bold;
+}
+
+.detailItem a:hover {
+    text-decoration: underline;
+}

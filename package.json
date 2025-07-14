@@ -2,14 +2,15 @@
   "name": "venia",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' NEXT_PRIVATE_BUILD_WORKERS=10 next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "rm -rf cacheM/category/* && node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
     "next": "15.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

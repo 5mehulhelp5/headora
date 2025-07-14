@@ -37,17 +37,17 @@ export default function CollectionBreadCrumbs({Data, categories}:any) {
   return (
     <>
      <div className={styles.cartegoryHeadeBreadcrumbs} style={{padding:'20px 20px 0'}}>
-        {breadcrumbs.map((crumb, index) => (
+     {breadcrumbs.map((crumb, index) => (
           <React.Fragment key={index}>
             {index < breadcrumbs.length - 1 ? (
               <>
                 <Link href={crumb.path}>
-                  {crumb.name}
+                  {crumb.name.replaceAll('.html','')}
                 </Link>
                 <span>/</span>
               </>
             ) : (
-              <span style={{ fontSize: '14px', color:'#000' }}>{crumb.name}</span>
+              <span style={{ fontSize: '10px', color: '#a29253' }}>{crumb.name.replaceAll('.html','')}</span>
             )}
           </React.Fragment>
         ))}

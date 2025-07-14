@@ -4,7 +4,7 @@ query {
     filter: {
       category_uid: { eq: "${uid}" }
     },
-    pageSize: 300,
+    pageSize: 21,
     currentPage: ${currentPage}
   ) {
     total_count
@@ -34,6 +34,8 @@ query {
         description
         url_key
       }
+      manufacturer
+      condition
       uid
       url_key
       id
@@ -77,9 +79,14 @@ query {
   }
 }
       ... on SimpleProduct {
+       return_policy
         # Example of custom attributes
-        
-        price {
+         ring_size
+         gender
+         condition
+         movement
+         bracelet_size
+         price {
           regularPrice {
             amount {
               value
@@ -90,6 +97,7 @@ query {
       }
         	__typename
       ... on ConfigurableProduct {
+       return_policy
         configurable_options {
           id
           attribute_id_v2
@@ -103,7 +111,11 @@ query {
           }
             
         }
-    
+     ring_size
+       gender
+       condition
+       movement
+       bracelet_size
         variants {
           attributes {
             code

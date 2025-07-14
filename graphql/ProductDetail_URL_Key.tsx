@@ -27,6 +27,7 @@ aggregations {
     } 
           total_count
     items {
+    manufacturer
       name
 			sku
    		url_key
@@ -91,7 +92,11 @@ aggregations {
           
         }
       }
+        ... on SimpleProduct{
+          return_policy
+       }
       ... on ConfigurableProduct {
+        return_policy
         configurable_options {
           id
           attribute_id_v2
@@ -196,79 +201,107 @@ aggregations {
 }
      
         	__typename
-      ... on ConfigurableProduct {
-  configurable_options {
-          id
-          attribute_id_v2
-          attribute_code
-          values {
-            label
-            value_index
-            swatch_data {
-              value
-            }
-          }
-            
-        }
-        variants {
-          attributes {
-            code
-            label
-            value_index
-          }
-          product {
-            id
-            sku
-            name
-            url_key
-            description {
-              html
-            }
-            short_description {
-              html
-            }
-            price_range {
-              minimum_price {
-                final_price {
-                  value
-                          currency
-                }
-                regular_price {
-                  value
-                          currency
-                }
-              }
-                  maximum_price{
-    regular_price{
-      value
-       currency
-    }
-    final_price{
-      value
-       currency
-    }
-  }
-            }
-            image {
-              url
-            }
-         
-            media_gallery {
-              url
-              label
-            }
-          }
-        }
-      }
-      ... on CustomizableProductInterface {
-        options {
-          title
-          sort_order
-          required
-        }
-      }
         
       }
+
+          upsell_products{
+       uid
+              url_key
+              id
+              name
+              sku
+            image {
+                url
+                  }
+            media_gallery {
+            url
+            label
+                          }
+            price {
+            regularPrice {
+            amount {
+            value
+            currency
+                   }
+                  }
+           }
+            price_range {
+            maximum_price{
+            regular_price{
+            value
+             currency
+             }
+             final_price{
+              value
+             currency
+            }
+            }
+            minimum_price {
+            final_price {
+            value
+            currency
+            }
+            regular_price {
+            value
+             currency
+                          }
+                            }
+    }
+     ... on SimpleProduct{
+          return_policy
+       }
+     
+        	__typename
+          }
+       crosssell_products {
+     uid
+              url_key
+              id
+              name
+              sku
+            image {
+                url
+                  }
+            media_gallery {
+            url
+            label
+                          }
+            price {
+            regularPrice {
+            amount {
+            value
+            currency
+                   }
+                  }
+           }
+            price_range {
+            maximum_price{
+            regular_price{
+            value
+             currency
+             }
+             final_price{
+              value
+             currency
+            }
+            }
+            minimum_price {
+            final_price {
+            value
+            currency
+            }
+            regular_price {
+            value
+             currency
+                          }
+                            }
+    }
+     ... on SimpleProduct{
+          return_policy
+       }
+     
+        	__typename
+    }
       image{
         url
       }
@@ -283,4 +316,3 @@ aggregations {
       }
     }
   }`
-export default fetchProductDetailURLKey

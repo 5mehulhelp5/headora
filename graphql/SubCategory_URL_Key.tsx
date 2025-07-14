@@ -1,9 +1,10 @@
 const fetchSubCategoryByURL = (urlKey: any, currentPage: number) => `
 query {
-  categoryList(filters: { url_key: { eq: "${urlKey}" } }) {
+  categoryList(filters: { url_path: { eq: "${urlKey}" } }) {
     name
     uid
     url_key
+    url_path
     description
 
     image
@@ -13,7 +14,7 @@ query {
     meta_description 
     display_mode
     
-    products(pageSize: 100, currentPage: ${currentPage}) {
+    products(pageSize: 21, currentPage: ${currentPage}) {
       total_count
       page_info {
         total_pages
@@ -30,6 +31,8 @@ query {
         image {
           url
         }
+          manufacturer
+          condition
         price {
           regularPrice {
             amount {

@@ -10,6 +10,9 @@ import Head from 'next/head'
 import Content from '@/components/Category/Content';
 import { useRouter } from 'next/router';
 
+import fs from 'fs/promises';
+  import path from 'path';
+  import { createHash } from 'crypto';
 const CategorySchema = ({ category, url }: any) => {
   // if (!category || !category.name || !category.description || !category.image) {
   //   return null;
@@ -45,7 +48,7 @@ const BreadcrumbSchema = ({ breadcrumbs }: any) => {
       "name": breadcrumb?.name,
       "item": index === 0
       ? `${process.env.baseURLWithoutTrailingSlash}${breadcrumb?.path}` 
-      : `${process.env.baseURLWithoutTrailingSlash}${breadcrumb?.path}/`, 
+      : `${process.env.baseURLWithoutTrailingSlash}${breadcrumb?.path}`, 
     })),
   };
 
@@ -60,6 +63,32 @@ const BreadcrumbSchema = ({ breadcrumbs }: any) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+
+  const allCategoriesPathFile = path.resolve(`./cacheM/thirdLevelCategoriesPath.json`);
+    try {
+      let allCategories= JSON.parse(await fs.readFile(allCategoriesPathFile, 'utf-8'));
+      const paths = allCategories.map((url: any) => {
+        let urlPath = url.split('/');
+        return { 
+          params: { 
+              slug: urlPath[0] || '',
+              slug2: urlPath[1] || '',
+              slug3: urlPath[2] || ''
+            } 
+          }  // Single segment case
+            
+
+    });
+     let responseData = {
+      paths,
+      fallback: false,
+    }
+  
+    return responseData;
+  
+    } catch (error) {
+      
+    }
   const client = new Client();
 
   const fetchAllCategories = async () => {
@@ -68,19 +97,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 
   const categories = await fetchAllCategories();
-
   let paths: { params: { slug: any; slug2: any; slug3?: any } }[] = [];
-
-  if (categories?.children) {
+ if (categories?.children) {
     categories.children.forEach((category: any) => {
       if (category.children) {
         category.children.forEach((subCategory: any) => {
           if (subCategory?.children) {
             subCategory.children.forEach((subSubCategory: any) => {
 
-              if (category.url_key && subCategory.url_key && subSubCategory.url_key) {
+              if (subSubCategory.url_path) {
+                let urlPath =subSubCategory.url_path.split('/')
                 paths.push({
-                  params: { slug: category.url_key, slug2: subCategory.url_key, slug3: subSubCategory.url_key }
+                  params: { slug: urlPath[0], slug2: urlPath[1], slug3: urlPath[2]+".html"  }
                 });
               }
             })
@@ -90,22 +118,36 @@ export const getStaticPaths: GetStaticPaths = async () => {
       }
     });
   }
-
-
-
-  return {
+  let responseData = {
     paths,
     fallback: false,
-  };
+  }
+  return responseData;
 };
 
 
 
 export const getStaticProps: GetStaticProps = async ({ params, query }: any) => {
+  const { slug,slug2,slug3 } = params as { slug: string ,slug2: string,slug3: string;};
+  const urlPath=slug+'/'+slug2+'/'+slug3.replace(/\.html$/, '')
+
+  //console.log('/////////////////////getStaticProps////////////slug3:-',urlPath)
+    const cacheStaticProps= createHash('md5')
+      .update(urlPath+'.html')
+      .digest('hex')
+      const cacheStaticPropsPath= path.resolve(`./cacheM/category/${cacheStaticProps}.json`)
+      
+      try {
+        let responseData= JSON.parse(await fs.readFile(cacheStaticPropsPath, 'utf-8'));
+        return responseData;
+      } catch (error) {
+        
+      }
+  
+
   const client = new Client();
 
   // Handle slug and page from params and query
-  const slug = params?.slug3 || params?.slug || params?.slug;
   const page = query?.page ? parseInt(query.page as string, 10) : 1;
 
 
@@ -120,13 +162,13 @@ export const getStaticProps: GetStaticProps = async ({ params, query }: any) => 
   }
   };
   try {
-  const category = await fetchCategoryByURLKey(slug as string, page);
+  const category = await fetchCategoryByURLKey(urlPath as string, page);
 
 
   const uid = category.uid || null;
 
   // Fetch products for the category by UID and page
-  let allProduTList: any[] = []
+  let allProductList: any[] = []
   const fetchProductsByUID = async (uid: string, currentPage: number) => {
     try {
     const response = await client.fetchSubCategoryData(uid, currentPage);
@@ -139,33 +181,27 @@ export const getStaticProps: GetStaticProps = async ({ params, query }: any) => 
   let productsRes = await fetchProductsByUID(uid, page);
   if (productsRes.products) {
     productsRes.products.items.forEach((item: any) => {
-      allProduTList.push(item)
+      allProductList.push(item)
     })
-    if (productsRes.products.page_info.total_pages > 1) {
-      for (var i = 2; i <= productsRes?.products?.page_info?.total_pages; i++) {
+   
+  }
 
-        const additionalProducts = await fetchProductsByUID(uid, i);
-        if (additionalProducts.products) {
-          additionalProducts.products.items.forEach((item: any) => {
-            allProduTList.push(item)
-          })
+  let responseData={
+        props: {
+          allProductList,       // Products data
+          category,            // Category data
+          currentPage: page,   // Current page number
+          productsRes,         // Product response data
         }
       }
+      // await fs.writeFile(cacheStaticPropsPath, JSON.stringify(responseData));
+      return responseData;
 
-    }
-  }
-  return {
-    props: {
-      allProduTList,       // Products data
-      category,            // Category data
-      currentPage: page,   // Current page number
-      productsRes,         // Product response data
-    },
-  };
+  
 } catch (error) {
   return {
     props: {
-      allProduTList: [],  // Empty products list
+      allProductList: [],  // Empty products list
       category: null,     // Null category data
       currentPage: page,  // Current page number
       productsRes: null,  // Null product response
@@ -174,7 +210,7 @@ export const getStaticProps: GetStaticProps = async ({ params, query }: any) => 
 }
 };
 
-const Subcategory = ({ allProduTList, category, productsRes,categories }: any) => {
+const Subcategory = ({ allProductList, category, productsRes,categories, showRibbon, isMobile }: any) => {
 
   const router = useRouter()
   const url = router.asPath
@@ -209,7 +245,7 @@ const Subcategory = ({ allProduTList, category, productsRes,categories }: any) =
 ];
   return (
     <>
-      {/* <Head>
+      <Head>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
  
@@ -241,15 +277,17 @@ const Subcategory = ({ allProduTList, category, productsRes,categories }: any) =
         )}
       </Head>
       <CategorySchema category={category} url={url}/>
-        <BreadcrumbSchema breadcrumbs={breadcrumbs}/> */}
+        <BreadcrumbSchema breadcrumbs={breadcrumbs}/>
 
           <CategoryHeader Data={{ name: category?.name, description:category?.short_description }} categories={categories}/>
 
       <CategoriesProducts
         Data={{ name: category?.name }}
         categoriesData={productsRes}
-        productsData={allProduTList}
+        productsData={allProductList}
         categoryDetail={category}
+        showRibbon={showRibbon}
+        isMobile={isMobile}
       />
       <Content description={category?.description} />
  

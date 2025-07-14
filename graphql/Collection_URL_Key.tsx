@@ -1,11 +1,12 @@
 const fetchCollectionByURL = (urlKey: any) => `
 query {
-  categoryList(filters: { url_key: { eq: "${urlKey}" } }) {
+  categoryList(filters: { url_path: { eq: "${urlKey}" } }) {
       id
       name
     	uid
   		name
       url_key
+      url_path
          meta_title  
           meta_keywords
     meta_description
@@ -16,6 +17,7 @@ query {
       name
       uid
       url_key
+      url_path
          image
      
       description
@@ -23,6 +25,7 @@ query {
         name
       	 uid
          url_key
+         url_path
             image
      
       description
@@ -31,10 +34,12 @@ query {
        	uid
         image
         url_key
+        url_path
      	children{
         name
        uid
        url_key
+       url_path
 }
   }
 

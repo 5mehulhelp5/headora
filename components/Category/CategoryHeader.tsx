@@ -8,9 +8,8 @@ export default function CategoryHeader({ Data, categories }: any) {
   const { slug, slug2, slug3, ...rest } = router.query;
 
   // Get all slugs from query
-  const slugs = [slug, slug2, slug3, ...Object.values(rest)].filter(Boolean);
-
-
+  let slugs = [slug, slug2, slug3, ...Object.values(rest)].filter(Boolean);
+  
   const findCategoryName = (key: string, items?: any): string | null => {
     if (!Array.isArray(items)) return null; // Ensure items is an array
 
@@ -43,13 +42,13 @@ export default function CategoryHeader({ Data, categories }: any) {
           <React.Fragment key={index}>
             {index < breadcrumbs.length - 1 ? (
               <>
-                <Link href={crumb.path}>
-                  {crumb.name}
+                <Link href={crumb.path+'.html'} >
+                  {crumb.name.replaceAll('.html','')}
                 </Link>
                 <span>/</span>
               </>
             ) : (
-              <span style={{ fontSize: '14px', color: '#111827' }}>{crumb.name}</span>
+              <span style={{ fontSize: '10px', color: '#a29253' }}>{crumb.name.replaceAll('.html','')}</span>
             )}
           </React.Fragment>
         ))}

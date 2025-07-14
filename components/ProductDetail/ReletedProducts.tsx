@@ -94,18 +94,18 @@ const variantProduct = selectedVariant?.product || product;
                             return(
 
                             <div key={product.uid} className={styles.productItem}>
-                                <Link  href={`/product/${product?.url_key}`}>
+                                <Link  href={`/product/${product?.url_key}.html`}>
                                     <Image
                                        src={
-                                        variantProduct?.media_gallery?.length > 0 && variantProduct?.media_gallery?.[0]?.url
-                                          ? variantProduct?.media_gallery?.[0]?.url.includes("cache")
-                                            ? variantProduct?.media_gallery?.[0]?.url.replace(/\/cache\/.*?\//, "/")
-                                            : variantProduct?.media_gallery?.[0]?.url
-                                          : variantProduct?.image?.url
-                                            ? variantProduct.image.url.includes("cache")
-                                              ? variantProduct.image.url.replace(/\/cache\/.*?\//, "/")
-                                              : variantProduct.image.url
-                                            : ""
+                                        variantProduct?.image?.url?.includes("placeholder")
+                                ? variantProduct?.media_gallery?.[0]?.url?.includes("cache")
+                                  ? variantProduct.media_gallery[0].url.replace(/\/cache\/.*?\//, "/")
+                                  : variantProduct.media_gallery?.[0]?.url
+                                : variantProduct?.image?.url
+                                  ? variantProduct.image.url.includes("cache")
+                                    ? variantProduct.image.url.replace(/\/cache\/.*?\//, "/")
+                                    : variantProduct.image.url
+                                  : "/Images/productplaceholder.png"
                                       }
                                         alt={variantProduct.name}
                                         className={styles.productImage}

@@ -1,0 +1,60 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .modal {
+    background: #fff;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 2px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .logo {
+    margin-bottom: 1rem;
+  }
+  
+  .description {
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
+  .scrollBox {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .shopLink {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #a8893d;
+    text-decoration: none;
+  }
+  

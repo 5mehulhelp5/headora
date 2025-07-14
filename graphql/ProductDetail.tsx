@@ -4,6 +4,14 @@ query {
   pageSize:300
   currentPage:${currentPage},
  ) {
+       aggregations {
+      label
+      options {
+        count
+        label
+        value
+      }
+    }
     page_info{
     page_size
       total_pages
@@ -13,6 +21,7 @@ url_key
 sku
     }
     }
-  }`
+  }
+    `
 
 export default fetchProductdetailallURLKey

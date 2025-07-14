@@ -37,7 +37,7 @@ export default function Content({ description }: any) {
       />
       {isLongDescription && (
         <span
-          className={styles.showToggle}
+          className="showDescriptionToggle"
           onClick={() => setIsExpanded(!isExpanded)}
         >
           {isExpanded ? 'Show less' : 'Show more'}

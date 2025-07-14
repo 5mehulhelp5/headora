@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 
 
+
 function CollectionListing({ Collection }: any) {
     const router = useRouter()
 
@@ -40,12 +41,13 @@ function CollectionListing({ Collection }: any) {
 
     const listClassName = Collection?.children?.length > 15 ? styles.extentedlistingWrapper : styles.listingWrapper;
     const itemClassName = Collection?.children?.length > 15 ? styles.extentedwrapperPushItem : styles.wrapperPushItem;
+
     return (
 
         <>
             <div className={styles.CollectionListingContainer}>
                 <div className={styles.collectionHeader}>
-                    <h2 style={{ textTransform: 'uppercase' }}>{Collection?.name} CATEGORIES</h2>
+                    <h2 style={{ textTransform: 'uppercase' }}>{Collection?.name} COLLECTIONS</h2>
                     <hr />
                 </div>
 
@@ -57,11 +59,11 @@ function CollectionListing({ Collection }: any) {
                             <div className={styles.white_background}></div>
                             <div className={styles.containerWrapper}>
                                 <article>
-                                    <Link  href={`/${Collection?.url_key}/${item.url_key}`}>
+                                    <Link  href={`/${Collection?.url_key}/${item.url_key}.html`}>
                                         <figure>
                                             <picture>
                                                 <Image
-                                                    src={item?.ocode_image ? `${process.env.baseURL}${item.ocode_image}` : "/Images/prorate_place_holder.png"}
+                                                    src={item?.image ? item?.image : "/Images/prorate_place_holder.png"}
                                                     alt={item?.name}
                                                     width={500} // set width appropriately
                                                     height={500} // set height appropriately
@@ -70,10 +72,10 @@ function CollectionListing({ Collection }: any) {
                                             </picture>
                                             <figcaption>
                                                 <h2>{item.name}</h2>
-                                                {renderDescription(item?.short_description)}
+                                                {renderDescription(item?.description)}
                                                 {/* <div className={styles.priceInfo}>
                                                 <p>RETAIL PRICE: <span>$5000</span></p>
-                                                <p>ON TRUEFACET: <span>STARTS AT $4500</span></p>
+                                                <p>ON {`${process.env.siteName}`}: <span>STARTS AT $4500</span></p>
                                             </div> */}
 
                                             </figcaption>
@@ -83,7 +85,7 @@ function CollectionListing({ Collection }: any) {
                                     </Link>
                                 </article>
                             </div>
-                            <Link  className={styles.shopButton} href={`/${Collection?.url_key}/${item.url_key}`}>SHOP </Link>
+                            <Link  className={styles.shopButton} href={`/${Collection?.url_key}/${item.url_key}.html`}>SHOP </Link>
 
                         </li>
 

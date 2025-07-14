@@ -42,7 +42,7 @@ function ReviewForm({AllReviews, reviewRatings, handleRatingClick, setReviewNick
                     ))}
                 </div>
                 <div className={styles.field_wrapper}>
-                <div className={styles.field}>
+                <div className={styles.field} style={{flex:'1 2'}}>
                     <label className={styles.label}>Name</label>
                     <div className={styles.control}>
                         <input
@@ -54,7 +54,7 @@ function ReviewForm({AllReviews, reviewRatings, handleRatingClick, setReviewNick
                         />
                     </div>
                 </div>
-                <div className={styles.field}>
+                <div className={styles.field} style={{flex:'2 2'}}>
                     <label className={styles.label}>Heading</label>
                     <div className={styles.control}>
                         <input

@@ -42,7 +42,7 @@ function SubCollectionListing({ Collection }: any) {
 
         const secondSegment = pathArray[1];
 
-        const newUrl = `/${secondSegment}/${Collection?.url_key}/${itemUrlKey}`;
+        const newUrl = `/${secondSegment}/${Collection?.url_key}/${itemUrlKey}.html`;
 
         return newUrl;
     };
@@ -54,7 +54,7 @@ function SubCollectionListing({ Collection }: any) {
         <>
             <div className={styles.CollectionListingContainer}>
                 <div className={styles.collectionHeader}>
-                    <h2 style={{ textTransform: 'uppercase' }}>{Collection.name} CATEGORIES</h2>
+                    <h2 style={{ textTransform: 'uppercase' }}>{Collection.name} COLLECTIONS</h2>
                     <hr />
                 </div>
 
@@ -70,7 +70,7 @@ function SubCollectionListing({ Collection }: any) {
                                         <figure>
                                             <picture>
                                                 <Image
-                                                    src={item?.ocode_image ? `${process.env.baseURL}${item.ocode_image}` : "/Images/prorate_place_holder.png"}
+                                                    src={item?.image ? `${item.image}` : "/Images/prorate_place_holder.png"}
                                                     alt={item?.name || 'placeholder'}
                                                     width={500}  // set width appropriately
                                                     height={500} // set height appropriately
@@ -80,7 +80,7 @@ function SubCollectionListing({ Collection }: any) {
                                             </picture>
                                             <figcaption>
                                                 <h2>{item.name}</h2>
-                                                {renderDescription(item?.short_description)}
+                                                {renderDescription(item?.description)}
                                            
 
                                             </figcaption>
