@@ -7,7 +7,7 @@ import { dirname } from 'path';
 import { createHash } from 'crypto';
 
 //const path = require('path');
-const BASE_URL = process.env.baseURLWithoutTrailingSlash || 'https://www.truefacetnft.com'; 
+const BASE_URL = process.env.baseURLWithoutTrailingSlash || 'https://headora.ocodecommerce.com'; 
 import { createFiltersFromAggregations, createProductsFromMagProducts } from '../components/ConfigureProduct.js';
 
 const staticSitemapContent = `<?xml version="1.0" encoding="UTF-8"?>

@@ -9,7 +9,6 @@ import fetchProductBySKU from "./fetchProductBySKU";
 import FooterCMS from "./FooterCMS";
 import GET_GLOSSARY_PAGE from "./GlossaryCMS";
 import fetchProductdetailallURLKey from "./ProductDetail";
-import fetchProductDetailURLKey from "./ProductDetail_URL_Key";
 import GET_RETURNS_PAGE from "./Returns";
 import ReviewRating from "./ReviewRating";
 import ReviewsAllValues from "./ReviewsAllValues";
@@ -90,7 +89,7 @@ export class Client {
 
     async fetchCMSPages() {
         try {
-            const identifier = "home-page-tf";
+            const identifier = "home";
             const query = GET_CMS_PAGE(identifier); 
             const response = await fetch(`${process.env.magentoEndpoint}`, {
                 method: 'POST',
