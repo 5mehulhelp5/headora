@@ -78,29 +78,23 @@ useEffect(() => {
         <div className={styles.row}>
           <div className={styles.topLeft}>
             <div className={`${styles.tfLocation} ${styles.active}`}>
-              <Link href={`${process.env.baseURL}`}>
+              <Link href={`/`}>
                 <span className={styles.tfLocationWeb}>
-                  {isMobile ? "SHOP PRE-LOVED" : "SHOP CERTIFIED PRE-LOVED"}
+                  {isMobile ? "DEFAULT STORE" : "DEFAULT STORE"}
                 </span>
               </Link>
             </div>
             <div className={`${styles.tfLocation} `}>
-              <Link href={`${process.env.SecondStoreURL}`}>
+              <Link href={'/'}>
                 <span className={styles.tfLocationWeb}>
-                  {isMobile ? "SHOP BOUTIQUE" : "SHOP BRAND BOUTIQUE"}
+                  {isMobile ? "SECOND STORE" : "SECOND STORE"}
                 </span>
               </Link>
             </div>
           </div>
           <div className={styles.topRight}>
             <ul className={styles.topNav}>
-              <li
-                className={styles.authorizedPartners}
-                onClick={handleAuthorizedPartnersClick}
-                style={{ cursor: "pointer" }}
-              >
-                Authorized Partners
-              </li>
+            
               <li>
                 <a title="ABOUT US" href={`${process.env.baseURL}our-story`}>
                   ABOUT US

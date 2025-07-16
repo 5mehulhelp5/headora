@@ -151,12 +151,12 @@ function sellOldUsedJewelryWatchesOnline({ CMSPageData, showRibbon }: any) {
     <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | TrueFacet "}</title>
+        <title>{CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | Headora "}</title>
         <meta
           name="description"
           content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Sell Fast To Millions Of Buyers and Get up to 82% Of The Sale Value Back--Higher Than Any Other Luxury Marketplace"}
         />
-        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | TrueFacet "}></meta>
+        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | Headora "}></meta>
         <meta
           name="robots"
        content="noindex, nofollow"
@@ -167,7 +167,7 @@ function sellOldUsedJewelryWatchesOnline({ CMSPageData, showRibbon }: any) {
         />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | TrueFacet "} />
+        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | Headora "} />
         <meta
           property="og:description"
           content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Sell Fast To Millions Of Buyers and Get up to 82% Of The Sale Value Back--Higher Than Any Other Luxury Marketplace"}
@@ -176,7 +176,7 @@ function sellOldUsedJewelryWatchesOnline({ CMSPageData, showRibbon }: any) {
           property="og:url"
           content={`${process.env.baseURL}sell-old-used-jewelry-watches-online/`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/sellOGImage.png`}
@@ -189,11 +189,11 @@ function sellOldUsedJewelryWatchesOnline({ CMSPageData, showRibbon }: any) {
         <meta property="og:image:height" content="705" />
         <meta
           property="og:image:alt"
-          content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | TrueFacet "}
+          content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | Headora "}
         />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | TrueFacet "} />
+        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Sell Your Old Used Jewelry, Real Stones, and Watches Online | Headora "} />
         <meta
           name="twitter:description"
           content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Sell Fast To Millions Of Buyers and Get up to 82% Of The Sale Value Back--Higher Than Any Other Luxury Marketplace"}

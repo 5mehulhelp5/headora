@@ -7,7 +7,7 @@ import CartBag from "./CartBag";
 import { useRouter } from "next/router";
 import QuickSearch from "../Search/QuickSearch";
 
-function Header({ categoriesList  }: any) {
+function Header({ categoriesList }: any) {
   const [isSearchOpen, setSearchOpen] = useState<boolean>(false); // New state for search input
   const [searchText, setSearchText] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any>(); // Store search results
@@ -40,12 +40,12 @@ function Header({ categoriesList  }: any) {
   }
   useEffect(() => {
     const handleRouteChange = () => {
-      setLoading(false); 
+      setLoading(false);
       closeSearch()
     };
-  
+
     router.events.on("routeChangeComplete", handleRouteChange);
-  
+
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
@@ -135,54 +135,57 @@ function Header({ categoriesList  }: any) {
       // Don't close search here — it'll be closed after route change
     }
   };
-  
-  const refinedCategories = (categories || [])
-  .filter((category: any) => category.children?.length > 0)
-  .map((category: any) => {
-    const refinedChildren = category.children.map((subCategory: any) => {
-      const refinedSubChildren = subCategory.children?.slice(0, 4); // Keep slice if you still want to limit the sub-sub categories
 
-      return {
-        ...subCategory,
-        children: refinedSubChildren,
-      };
-    });
+const refinedCategories = (categories || []).map((category: any) => {
+  const refinedChildren = category.children?.map((subCategory: any) => {
+    const refinedSubChildren = subCategory.children?.slice(0, 4); // Keep slice if you still want to limit the sub-sub categories
 
     return {
-      ...category,
-      children: refinedChildren,
+      ...subCategory,
+      children: refinedSubChildren,
     };
   });
 
+  return {
+    ...category,
+    children: refinedChildren,
+  };
+});
 
- // ==================Contact us Drop Down==============
 
- const handleMouseEnter = () => {
-  setIsDropdownOpen(true);
-};
 
-const handleMouseLeave = () => {
-  setIsDropdownOpen(false);
-};
+  // ==================Contact us Drop Down==============
 
-console.log(refinedCategories,'refinedCategories')
+  const handleMouseEnter = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDropdownOpen(false);
+  };
+
+  console.log(refinedCategories, 'refinedCategories')
   return (
     <nav className={styles.navbar}>
       <header className={styles.header}>
         <div className={styles.logo}>
           <Link href={"/"}>
-            <Image
-              src="/Logo/BoutiqueFullLogo.svg"
-              alt={isScrolled ? "Monogram" : "Full Logo"}
-              width={200}
-              height={40}
-              className={styles.logo}
-            />
+            {process.env.logoURL?.length === 0 ? (
+              `${process.env.logoText}`
+            ) : (
+              <Image
+                src={`${process.env.logoText}`}
+                alt="Logo"
+                width={120}
+                height={35}
+                className={styles.logo}
+              />
+            )}
           </Link>
         </div>
         <div className={styles.contactUsDropdownContainer} onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}>
-          <span className={styles.contactUsToggle} style={{fontSize:'12px'}} >
+          onMouseLeave={handleMouseLeave}>
+          <span className={styles.contactUsToggle} style={{ fontSize: '12px' }} >
             <Image
               src="/Images/person-call.svg"
               alt="person call"
@@ -191,14 +194,14 @@ console.log(refinedCategories,'refinedCategories')
               className={styles.contactUsIcon}
             />
             <span>Contact Us</span>
-            
+
 
           </span>
-          <div style={{marginTop:'10px', borderTop:'1px solid #e6e6e6',paddingTop:'10px'}} className={`${styles.contactUsDropdownContent}${isDropdownOpen ? styles.open : ''}`} >
+          <div style={{ marginTop: '10px', borderTop: '1px solid #e6e6e6', paddingTop: '10px' }} className={`${styles.contactUsDropdownContent}${isDropdownOpen ? styles.open : ''}`} >
             <ul>
               <span className={styles.contactUsDropdownlist} onClick={() => { window.open(`${process.env.baseURLWithoutTrailingSlash}/faq`, "_blank") }}>
                 <Image src="/Images/contact.png" alt="person call" width={15} height={15} />
-                Contact  
+                Contact
               </span>
               <span className={styles.contactUsDropdownlist}>
                 <Image src="/Images/chat-118.png" alt="chat" width={15} height={15} />
@@ -218,10 +221,10 @@ console.log(refinedCategories,'refinedCategories')
                 key={category.uid}
                 className={styles.navItem}
                 style={
-                  category.children.length < 5 ? {position: "relative"} : {position: "unset"}
+                  category.children.length < 5 ? { position: "relative" } : { position: "unset" }
                 }
               >
-                 <Link href={`/${category.url_path}.html`}>{category.name}</Link>
+                <Link href={`/${category.url_path}.html`}>{category.name}</Link>
 
                 <>
                   {category.children.length > 0 && (
@@ -243,17 +246,16 @@ console.log(refinedCategories,'refinedCategories')
                   )}
 
                   {/* {category.children?.some((subCategory: any) => subCategory.product_count ? ( */}
-                  {category.children.length > 5 || category.children.some((child:any) => child.children && child.children.length > 0) ? (
+                  {category.children.length > 5 || category.children.some((child: any) => child.children && child.children.length > 0) ? (
                     <div className={styles.dropdown}>
-                      {category.name.toLowerCase() == "brands" ? (<h3 className={styles.MegaMenuBrandsHeading}>Brands</h3>):(null)}
+                      {category.name.toLowerCase() == "brands" ? (<h3 className={styles.MegaMenuBrandsHeading}>Brands</h3>) : (null)}
                       <div className={styles.megaMenuContainer}>
-                        
+
                         <div
-                          className={`${styles.categoryGrid} ${
-                            category.children.length <= 5
+                          className={`${styles.categoryGrid} ${category.children.length <= 5
                               ? styles.fewCategories
                               : ""
-                          }`}
+                            }`}
                           style={{
                             gap:
                               category.name.toLowerCase() == "brands"
@@ -267,7 +269,7 @@ console.log(refinedCategories,'refinedCategories')
                               className={styles.categoryColumn}
                             >
                               <span className={styles.categoryTitle}>
-                              <Link href={`/${subCategory.url_path}.html`}>{subCategory.name}</Link>
+                                <Link href={`/${subCategory.url_path}.html`}>{subCategory.name}</Link>
                               </span>
 
                               {subCategory.children?.length > 0 && (
@@ -280,21 +282,21 @@ console.log(refinedCategories,'refinedCategories')
                                           style={{
                                             padding:
                                               category.name.toLowerCase() ==
-                                              "brands"
+                                                "brands"
                                                 ? "0px"
                                                 : undefined,
                                           }}
                                         >
                                           {category.name.toLowerCase() !==
-                                          "brands" ? (
+                                            "brands" ? (
                                             <Link
                                               href={`/${subSubCategory.url_path}.html`}
                                             >
                                               {subSubCategory.name}
                                             </Link>
-                                          ) : 
-                                         
-                                          null}
+                                          ) :
+
+                                            null}
                                         </li>
                                       )
                                     )}
@@ -320,96 +322,100 @@ console.log(refinedCategories,'refinedCategories')
                         </div>
                       </div>
                     </div>
-                  ) : category.children 
-                     ? (
-                    // ------------------start -------------------
+                  ) : category.children
+                    ? (
+                      // ------------------start -------------------
 
-                    <div
-                      className={styles.dropdown}
-                      style={{ minWidth: "140px",width:'unset', padding: "10px 10px" }}
-                    >
-                      <div className={styles.megaMenuContainer}>
-                        <div
-                         className={`${styles.categoryGrid} ${
-                          category.children.length >= 5
-                            ? styles.fewCategories
-                            : ""
-                        }`}
-                          style={{
-                            gap:
-                              category.name.toLowerCase() == "brands"
-                                ? "10px"
-                                : undefined,
-                            gridTemplateColumns: "repeat(1, 1fr)",
-                          }}
-                        >
-                          {category.children.map((subCategory: any) => (
-                            <div
-                              key={subCategory.uid}
-                              className={styles.categoryColumn}
-                            >
-                              <span className={styles.categoryTitle}>
-                                <Link href={`/${subCategory.url_path}.html`}>
-                                  {subCategory.name}
-                                </Link>
-                              </span>
+                      <div
+                        className={styles.dropdown}
+                        style={{ minWidth: "140px", width: 'unset', 
+                          padding: category.children?.length === 0 ? "0" : "10px 10px", 
+                          borderBottom: category.children?.length === 0 ? 'unset' :'', 
+                          boxShadow:category.children?.length === 0 ? 'unset' :'', 
+                          borderTop:category.children?.length === 0 ? 'unset' :''
+                           }}
+                      >
+                        <div className={styles.megaMenuContainer}>
+                          <div
+                            className={`${styles.categoryGrid} ${category.children.length >= 5
+                                ? styles.fewCategories
+                                : ""
+                              }`}
+                            style={{
+                              gap:
+                                category.name.toLowerCase() == "brands"
+                                  ? "10px"
+                                  : undefined,
+                              gridTemplateColumns: "repeat(1, 1fr)",
+                            }}
+                          >
+                            {category.children.map((subCategory: any) => (
+                              <div
+                                key={subCategory.uid}
+                                className={styles.categoryColumn}
+                              >
+                                <span className={styles.categoryTitle}>
+                                  <Link href={`/${subCategory.url_path}.html`}>
+                                    {subCategory.name}
+                                  </Link>
+                                </span>
 
-                              {subCategory.children?.length > 0 && (
-                                <ul className={styles.subCategoryList}>
-                                  {subCategory.name.toLowerCase() !== "brand" &&
-                                    subCategory.children.map(
-                                      (subSubCategory: any) => (
-                                        <li
-                                          key={subSubCategory.uid}
-                                          style={{
-                                            padding:
-                                              category.name.toLowerCase() ==
-                                              "brands"
-                                                ? "0px"
-                                                : undefined,
-                                          }}
-                                        >
-                                          {category.name.toLowerCase() !==
-                                          "brands" ? (
-                                            <Link
-                                              href={`/${subSubCategory.url_path}.html`}
-                                            >
-                                              {subSubCategory.name}
-                                            </Link>
-                                          ) : // category.children && category.children?.some((subCategory: any) => subCategory.length > 1) ? (
-                                          // <div className={styles.dropdown}>
-                                          //    <div className={styles.megaMenuContainer}>
-                                          //  <>Load</>
-                                          //  </div>
-                                          //  </div>
-                                          null}
-                                        </li>
-                                      )
+                                {subCategory.children?.length > 0 && (
+                                  <ul className={styles.subCategoryList}>
+                                    {subCategory.name.toLowerCase() !== "brand" &&
+                                      subCategory.children.map(
+                                        (subSubCategory: any) => (
+                                          <li
+                                            key={subSubCategory.uid}
+                                            style={{
+                                              padding:
+                                                category.name.toLowerCase() ==
+                                                  "brands"
+                                                  ? "0px"
+                                                  : undefined,
+                                            }}
+                                          >
+                                            {category.name.toLowerCase() !==
+                                              "brands" ? (
+                                              <Link
+                                                href={`/${subSubCategory.url_path}.html`}
+                                              >
+                                                {subSubCategory.name}
+                                              </Link>
+                                            ) : // category.children && category.children?.some((subCategory: any) => subCategory.length > 1) ? (
+                                              // <div className={styles.dropdown}>
+                                              //    <div className={styles.megaMenuContainer}>
+                                              //  <>Load</>
+                                              //  </div>
+                                              //  </div>
+                                              null}
+                                          </li>
+                                        )
+                                      )}
+
+                                    {subCategory.children.length > 4 && (
+                                      <li className={styles.viewAllLink}>
+                                        <Link href={`/${subCategory.url_path}.html`}>
+                                          View All
+                                        </Link>
+                                      </li>
                                     )}
-
-                                  {subCategory.children.length > 4 && (
-                                    <li className={styles.viewAllLink}>
-                                      <Link href={`/${subCategory.url_path}.html`}>
-                                        View All
-                                      </Link>
-                                    </li>
-                                  )}
-                                </ul>
-                              )}
-                            </div>
-                          ))}
+                                  </ul>
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : // {/* -----------------------end ----------------------- */}
+                    ) : // {/* -----------------------end ----------------------- */}
 
-                  null}
+                    null}
                 </>
                 {/* )} */}
               </li>
             ))}
 
-         
+
             <li>
               <div className={styles.actionItem} onClick={toggleSearch}>
                 <span className={styles.icon}>
@@ -453,11 +459,11 @@ console.log(refinedCategories,'refinedCategories')
           <div className={styles.actionItemWrapper}>
             {/* <Link href="/cart"> */}
             <span className={styles.icon}>
-         
-                <Link href={'/boutique/wishlist/'} >
-               <div className={styles.iconContainer}>
-                <Image className={styles.whishlistBlackIcon} src={'/Images/BlackHeart.png'} height={20} width={23} alt="wishlist icon"/>
-                <Image className={styles.whishlistGoldenIcon} src={'/Images/wishlistIcon.png'} height={20} width={23} alt="wishlist icon"/>
+
+              <Link href={'/boutique/wishlist/'} >
+                <div className={styles.iconContainer}>
+                  <Image className={styles.whishlistBlackIcon} src={'/Images/BlackHeart.png'} height={20} width={23} alt="wishlist icon" />
+                  <Image className={styles.whishlistGoldenIcon} src={'/Images/wishlistIcon.png'} height={20} width={23} alt="wishlist icon" />
                 </div>
               </Link>
             </span>

@@ -60,12 +60,12 @@ function Faq() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{"FAQ | TrueFacet"}</title>
+        <title>{"FAQ | Headora"}</title>
         <meta
           name="description"
           content={"Our customer support team prides itself in making each and every customer smile every single day. Happiness guaranteed."}
         />
-        <meta name="keywords" content={"FAQ | TrueFacet"}></meta>
+        <meta name="keywords" content={"FAQ | Headora"}></meta>
         <meta
           name="robots"
        content="noindex, nofollow"
@@ -76,7 +76,7 @@ function Faq() {
         />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={"FAQ | TrueFacet"} />
+        <meta property="og:title" content={"FAQ | Headora"} />
         <meta
           property="og:description"
           content={"Our customer support team prides itself in making each and every customer smile every single day. Happiness guaranteed."}
@@ -85,7 +85,7 @@ function Faq() {
           property="og:url"
           content={`${process.env.baseURL}faq/`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/FAQOGImage.png`}
@@ -98,11 +98,11 @@ function Faq() {
         <meta property="og:image:height" content="661" />
         <meta
           property="og:image:alt"
-          content={"FAQ | TrueFacet"}
+          content={"FAQ | Headora"}
         />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={"FAQ | TrueFacet"} />
+        <meta name="twitter:title" content={"FAQ | Headora"} />
         <meta
           name="twitter:description"
           content={"Our customer support team prides itself in making each and every customer smile every single day. Happiness guaranteed."}
@@ -131,10 +131,10 @@ function Faq() {
               Happiness guaranteed. If you don't see the answer to your
               questions below, please feel free to email us at{" "}
               <a
-                href="mailto:support@TrueFacet.com"
+                href="mailto:support@Headora.com"
                 className={styles.contactEmail}
               >
-                support@TrueFacet.com
+                support@Headora.com
               </a>{" "}
               or fill out the form below and we'll get back to you within one
               business day.
@@ -147,10 +147,10 @@ function Faq() {
             <div className={styles.contactInfo}>
               <h2 className={styles.contactTitle}>Reach Us At</h2>
               <a
-                href="mailto:support@TrueFacet.com"
+                href="mailto:support@Headora.com"
                 className={styles.contactEmail}
               >
-                support@TrueFacet.com
+                support@Headora.com
               </a>
               <div className={styles.businessHours}>
                 <p>Mon-Fri: 10AM - 6PM EST</p>

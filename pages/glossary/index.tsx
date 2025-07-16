@@ -9,12 +9,12 @@ function Glossary({CMSPageData}:any){
          <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{CMSPageData?.title ? CMSPageData?.title : "Glossary | TrueFacet "}</title>
+        <title>{CMSPageData?.title ? CMSPageData?.title : "Glossary | Headora "}</title>
         <meta
           name="description"
           content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Glossary "}
         />
-        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Glossary | TrueFacet "}></meta>
+        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Glossary | Headora "}></meta>
         <meta
           name="robots"
        content="noindex, nofollow"
@@ -25,7 +25,7 @@ function Glossary({CMSPageData}:any){
         />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Glossary | TrueFacet "} />
+        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Glossary | Headora "} />
         <meta
           property="og:description"
           content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Glossary "}
@@ -34,7 +34,7 @@ function Glossary({CMSPageData}:any){
           property="og:url"
           content={`${process.env.baseURL}glossary`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/glossaryOGImage.png`}
@@ -47,14 +47,14 @@ function Glossary({CMSPageData}:any){
         <meta property="og:image:height" content="656" />
         <meta
           property="og:image:alt"
-          content={CMSPageData?.title ? CMSPageData?.title : "Glossary | TrueFacet "}
+          content={CMSPageData?.title ? CMSPageData?.title : "Glossary | Headora "}
         />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Glossary | TrueFacet "} />
+        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Glossary | Headora "} />
         <meta
           name="twitter:description"
-          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "TrueFacet ships via Fedex and UPS to street addresses in the continental U.S., Alaska, and Hawaii. "}
+          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Headora ships via Fedex and UPS to street addresses in the continental U.S., Alaska, and Hawaii. "}
         />
         <meta
           name="twitter:image"

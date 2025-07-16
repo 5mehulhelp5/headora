@@ -11,14 +11,14 @@ function WatchWarranty({ CMSPageData }: any) {
         <title>
           {CMSPageData?.title
             ? CMSPageData?.title
-            : "Watches Warranty | TrueFacet"}
+            : "Watches Warranty | Headora"}
         </title>
         <meta
           name="description"
           content={
             CMSPageData?.meta_description
               ? CMSPageData?.meta_description
-              : "TrueFacet offers a limited warranty on all watches sold through our marketplace. Under the TrueFacet warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
+              : "Headora offers a limited warranty on all watches sold through our marketplace. Under the Headora warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
           }
         />
         <meta
@@ -26,7 +26,7 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.meta_keywords
               ? CMSPageData?.meta_keywords
-              : "Watches Warranty | TrueFacet"
+              : "Watches Warranty | Headora"
           }
         ></meta>
         <meta name="robots" content="noindex, nofollow" />
@@ -38,7 +38,7 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.title
               ? CMSPageData?.title
-              : "Watches Warranty | TrueFacet"
+              : "Watches Warranty | Headora"
           }
         />
         <meta
@@ -46,14 +46,14 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.meta_description
               ? CMSPageData?.meta_description
-              : "TrueFacet offers a limited warranty on all watches sold through our marketplace. Under the TrueFacet warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
+              : "Headora offers a limited warranty on all watches sold through our marketplace. Under the Headora warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
           }
         />
         <meta
           property="og:url"
           content={`${process.env.baseURL}watch-warranty`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/Warranty.png`}
@@ -69,7 +69,7 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.title
               ? CMSPageData?.title
-              : "Watches Warranty | TrueFacet"
+              : "Watches Warranty | Headora"
           }
         />
         <meta property="og:image:type" content="image/png" />
@@ -79,7 +79,7 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.title
               ? CMSPageData?.title
-              : "Watches Warranty | TrueFacet"
+              : "Watches Warranty | Headora"
           }
         />
         <meta
@@ -87,7 +87,7 @@ function WatchWarranty({ CMSPageData }: any) {
           content={
             CMSPageData?.meta_description
               ? CMSPageData?.meta_description
-              : "TrueFacet offers a limited warranty on all watches sold through our marketplace. Under the TrueFacet warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
+              : "Headora offers a limited warranty on all watches sold through our marketplace. Under the Headora warranty, we will repair any defects in the materials or workmanship as defined by the original manufacturer’s warranty."
           }
         />
         <meta

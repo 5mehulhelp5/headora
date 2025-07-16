@@ -6,7 +6,7 @@ query {
     },
     pageSize: 21,
     currentPage: ${currentPage}
-  ) {
+ ) {
     total_count
     page_info {
       total_pages
@@ -35,7 +35,6 @@ query {
         url_key
       }
       manufacturer
-      condition
       uid
       url_key
       id
@@ -79,13 +78,6 @@ query {
   }
 }
       ... on SimpleProduct {
-       return_policy
-        # Example of custom attributes
-         ring_size
-         gender
-         condition
-         movement
-         bracelet_size
          price {
           regularPrice {
             amount {
@@ -97,7 +89,7 @@ query {
       }
         	__typename
       ... on ConfigurableProduct {
-       return_policy
+ 
         configurable_options {
           id
           attribute_id_v2
@@ -111,11 +103,7 @@ query {
           }
             
         }
-     ring_size
-       gender
-       condition
-       movement
-       bracelet_size
+
         variants {
           attributes {
             code

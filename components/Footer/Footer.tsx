@@ -1,224 +1,109 @@
-import Link from "next/link";
-import Image from "next/image";
-import styles from "../../styles/Footer.module.css";
-import { useEffect, useState } from "react";
-// import { Facebook, Twitter, Instagram } from "lucide-react"
+// Footer.jsx
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import styles from '../../styles/Footer.module.css';
 
-function Footer({ FooterCMSData }: any) {
-  const sanitizedHtml = FooterCMSData?.cmsBlocks?.items?.[0]?.content;
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    const alreadySubscribed = localStorage.getItem("newsletterSubscribed");
-    if (alreadySubscribed === "true") {
-      setSubscribed(true);
-      setMessage("Thank you for subscribing!");
-    }
-  }, []);
-
-  const handleSubscribe = async () => {
-    if (!email || !email.includes("@")) {
-      setMessage("Please enter a valid email.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${process.env.baseURL}sendgrid/index/subscribe?email=${encodeURIComponent(
-          email
-        )}`
-      );
-
-      if (response.ok) {
-        localStorage.setItem("newsletterSubscribed", "true");
-        setSubscribed(true);
-        setMessage("Thank you for subscribing!");
-      } else {
-        setMessage("Subscription failed. Please try again.");
-      }
-    } catch (error) {
-      setMessage("Something went wrong. Please try again later.");
-    }
-  };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSubscribe();
-    }
-  };
+function Footer() {
   return (
-    // <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
     <footer className={styles.footer}>
-      {/* Newsletter Section */}
-      <div className={styles.newsletterSection}>
-        <div className={styles.newsletterContent}>
-          <h2 className={styles.newsletterHeading}>
-            Join Our Newsletter to
-            <br />
-            Keep Up To Date With Us
-          </h2>
-          <div className={styles.subscribeForm}>
-            {subscribed ? (
-              <p className={styles.SubscribeSuccess}>{message}</p>
-            ) : (
-              <>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email to subscribe"
-                  className={styles.subscribeInput}
-                  onKeyDown={handleKeyDown}
-                />
-                <button
-                  className={styles.subscribeButton}
-                  onClick={handleSubscribe}
-                >
-                  SUBSCRIBE
-                </button>
-                {!subscribed && message && (
-            <p style={{ color: "red", marginTop: "10px" }}>{message}</p>
-          )}
-              </>
-            )}
-          </div>
-     
-        </div>
-      </div>
-
-      <div className={styles.divider}></div>
-
-      {/* Main Footer Content */}
       <div className={styles.container}>
-        {/* Logo and Description Section */}
-        <div className={styles.logoSection}>
-          <Link href="/" className={styles.footerLogo}>
-            <Image
-              src="/Logo/TF_Full_Logo.png"
-              alt="Full Logo"
-              width={200}
-              height={40}
-              className={styles.logo}
-              style={{ filter: "invert()" }}
-            />
+        {/* Account Section */}
+        <div className={styles.column}>
+          <span>Account</span>
+          <Link href="/signin">Sign In</Link>
+          <Link href="/register">Register</Link>
+          <Link href="/order-status">Order Status</Link>
+          <Link href="/returns">Returns</Link>
+        </div>
 
-            {/* {process.env.logoURL?.length == 0 ? (
-              `${process.env.logoText}`
-            ) : (
-              <Image
-                src={`${process.env.logoText}`}
-                alt="Logo"
-                width={120}
-                height={35}
-                className={styles.logo}
-              />
-            )} */}
-          </Link>
-          <p className={styles.footerDescription}>
-          TrueFacet is the modern alternative for buying jewelry and watches. We are an online marketplace rooted in trust and transparency.
-          </p>
+        {/* About Us Section */}
+        <div className={styles.column}>
+          <span>About Us</span>
+          <Link href="/our-story">Our Story</Link>
+          <Link href="/email-signup">Email Signup</Link>
+          <Link href="/give-back">Give Back</Link>
+        </div>
+
+        {/* Help Section */}
+        <div className={styles.column}>
+          <span>Help</span>
+          <Link href="/customer-service">Customer Service</Link>
+          <Link href="/contact-us">Contact Us</Link>
+          <Link href="/order-status">Order Status</Link>
+          <Link href="/returns">Returns</Link>
+        </div>
+
+        {/* Follow Us Section */}
+        <div className={`${styles.column} ${styles.expand}`}>
+          <span>Follow Us!</span>
+          <p className={styles.footerDescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
           <div className={styles.socialLinks}>
-            <Link
-              href="https://www.facebook.com/profile.php?id=100088095545673&amp;mibextid=LQQJ4d&amp;rdid=GzonofqiS7wvqQ9V&amp;share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FhijNeHjqKVeZ4eJM%2F%3Fmibextid%3DLQQJ4d"
-             target="_blank" rel="noopener noreferrer"
-              aria-label="Facebook"
-            >
-              <div className={styles.socialIcon}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            <Link href="#instagram" passHref>
+       
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                 </svg>
-              </div>
+          
             </Link>
-            <Link href="http://twitter.com/truefacet" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <div className={styles.socialIcon}>
-                <Image src={'/Images/x.png'} height={16} width={16} alt={"x icon"} style={{filter:'invert()'}}/>
-              </div>
-            </Link>
-            <Link
-              href="http://www.pinterest.com/truefacet"
-              aria-label="Pinterest"
-              target="_blank" rel="noopener noreferrer"
-            >
-              <div className={styles.socialIcon}>
-              <Image src={'/Images/pinterest-icon.png'} height={20} width={20} alt={"p icon"} style={{filter:'invert()'}}/>
-              </div>
-            </Link>
-            <Link href="http://instagram.com/truefacet" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-              <div className={styles.socialIcon}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            <Link href="#facebook" passHref>
+       
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                 </svg>
-              </div>
+  
+            </Link>
+            <Link href="#twitter" passHref>
+       
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                </svg>
+    
             </Link>
           </div>
         </div>
 
-        {/* Shop Section */}
-        <div className={styles.linksSection}>
-          <h3 className={styles.linkSectionTitle}>SHOP</h3>
-          <div className={styles.linksList}>
-            <Link target="_blank" href="/brand">Brands</Link>
-            <Link target="_blank" href="/jewelry.html">Jewelry</Link>
-            <Link target="_blank" href="/watches.html">Watches</Link>
-            <Link target="_blank" href="/handbags.html">Handbags</Link>
-          </div>
-        </div>
-
-        {/* Customer Services Section */}
-        <div className={styles.linksSection}>
-          <h3 className={styles.linkSectionTitle}>HELP</h3>
-          <div className={styles.linksList}>
-            <Link target="_blank" href="/faq">FAQ</Link>
-            <Link target="_blank" href="/returns">Returns</Link>
-            <Link target="_blank" href="/how-to-check-size-and-fit">Size/Fit</Link>
-            <Link target="_blank" href="/glossary">Glossary</Link>
-            <Link target="_blank" href="/shipping">Shipping </Link>
-            <Link target="_blank" href="/watch-warranty">Watch Warranty</Link>
-            <Link target="_blank" href="/faq">Contact Us</Link>
-          </div>
-        </div>
-
-        {/* About Section */}
-        <div className={styles.linksSection}>
-          <h3 className={styles.linkSectionTitle}>About</h3>
-          <div className={styles.linksList}>
-            <Link target="_blank" href="/authenticity-promise">How It Works</Link>
-            <Link target="_blank" href="/authenticity-promise">Authenticity Promise</Link>
-            <Link target="_blank" href="/guide/">The Blog</Link>
-            <Link target="_blank" href="/bitpay-terms">Bitpay Cryptocurrency</Link>
-            <Link target="_blank" href="/ios-app">IOS App</Link>
+        {/* Subscribe Section */}
+        <div className={`${styles.column} ${styles.expand}`}>
+          <span>Subscribe to {`${process.env.siteName}`}</span>
+          <p className={styles.footerDescription}>Recieve the latest news, update and special offers right to your inbox.</p>
+          <div className={styles.subscribeForm}>
+            <input
+              type="email"
+              placeholder=""
+              className={styles.subscribeInput}
+            />
+            <span className={styles.subscribeButton}>
+              Subscribe
+            </span>
           </div>
         </div>
       </div>
-
-      <div className={styles.divider}></div>
 
       {/* Bottom Section */}
       <div className={styles.bottomSection}>
-        <div className={styles.copyright}>© Truefacet 2025</div>
+        <Link href={'/'} className={styles.footerLogo}>
+        {process.env.logoURL?.length == 0 ? (
+          `${process.env.logoText}`
+        ):(
+       
+       <Image
+          src={`${process.env.logoText}`}
+          alt="Logo"
+          width={120}
+          height={35}
+          className={styles.logo}
+        /> 
+      )}
+        </Link>
+        <div className={styles.copyright}>
+          Copyright © 2013-present Magento, Inc. All rights reserved.
+        </div>
         <div className={styles.legalLinks}>
-          <Link target="_blank" href="/terms-of-service">Terms Of Service
-          </Link>
-          <Link target="_blank" href="/privacy-policy">Privacy Policy</Link>
-          <Link target="_blank" href="/consignment-terms">Consignment Terms</Link>
+          <Link href="/terms">Terms of Use</Link>
+          <Link href="/privacy">Privacy Policy</Link>
         </div>
       </div>
     </footer>

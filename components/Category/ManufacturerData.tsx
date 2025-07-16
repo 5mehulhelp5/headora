@@ -2299,7 +2299,7 @@ export  const manufacturer = [
     value: "27505",
   },
   {
-    "data-title": "Truefacet",
+    "data-title": "Headora",
     value: "34880",
   },
   {

@@ -73,12 +73,12 @@ function Brand({ categoriesList }: any) {
     <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}</title>
+        <title>{"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}</title>
         <meta
           name="description"
-          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}
+          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}
         />
-        <meta name="keywords" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}></meta>
+        <meta name="keywords" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}></meta>
         <meta
           name="robots"
        content="noindex, nofollow"
@@ -89,16 +89,16 @@ function Brand({ categoriesList }: any) {
         />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"} />
+        <meta property="og:title" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"} />
         <meta
           property="og:description"
-          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}
+          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}
         />
         <meta
           property="og:url"
           content={`${process.env.baseURL}shipping`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/shippingOG.png`}
@@ -111,14 +111,14 @@ function Brand({ categoriesList }: any) {
         <meta property="og:image:height" content="487" />
         <meta
           property="og:image:alt"
-          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}
+          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}
         />
         <meta property="og:image:type" content="image/png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"} />
+        <meta name="twitter:title" content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"} />
         <meta
           name="twitter:description"
-          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | TrueFacet"}
+          content={"Top Jewelry and Watch Brands - The Best Luxury Brands | Headora"}
         />
         <meta
           name="twitter:image"

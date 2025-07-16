@@ -9,10 +9,10 @@ const nextConfig: NextConfig = {
     magentoEndpoint: 'https://headora.ocodecommerce.com/graphql', // magento endpoint
     baseURL:'https://headora.ocodecommerce.com/', // baseURL of your site with  trailing slash 
     baseURLWithoutTrailingSlash:'https://headora.ocodecommerce.com', // baseURL of your site without trailing slash 
-    // SecondStoreURL: 'https://boutique.truefacetnft.com/',
+    // SecondStoreURL: 'https://boutique.Headoranft.com/',
     logoURL: '', // if you don't have Logo then leave it blank. 
-    logoText: 'Truefacet', // if you don't have Logo then you can simply site name 
-    siteName: 'Truefacet' // your site name
+    logoText: 'Headora', // if you don't have Logo then you can simply site name 
+    siteName: 'Headora' // your site name
   },  
 
   api: {

@@ -132,7 +132,7 @@ function ShortDescription({
           styles.productShortDetailDescriptionContainer
         }
       >
-        <p>TrueFacet promises authenticity of our products. Learn more about TrueFacet's <Link href={'/authenticity-promise'}>authenticity promise</Link>. </p>
+        <p>Headora promises authenticity of our products. Learn more about Headora's <Link href={'/authenticity-promise'}>authenticity promise</Link>. </p>
         {/* <div dangerouslySetInnerHTML={{ __html: descriptionHTML }} /> */}
       </div>
 

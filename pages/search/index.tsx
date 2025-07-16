@@ -418,14 +418,14 @@ console.log(searchResults,'searchResults')
   return (
     <>
       <Head>
-        <title>{`Search results for ${slug || "products"} - TrueFacet`}</title>
+        <title>{`Search results for ${slug || "products"} - Headora`}</title>
         <meta
           name="description"
           content={`Find the best products for ${slug || "your search"} in our store. Shop now from a wide variety of products.`}
         />
         <meta name="keywords" content={`search, ${slug || "products"}, products, brands`} />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={`Search results for ${slug || "products"} - TrueFacet`} />
+        <meta property="og:title" content={`Search results for ${slug || "products"} - Headora`} />
         <meta
           property="og:description"
           content={`Explore a wide range of products related to ${slug || "your search"}. Discover the best deals today.`}
@@ -434,12 +434,12 @@ console.log(searchResults,'searchResults')
           property="og:url"
           content={`${process.env.baseURL}search?query=${encodeURIComponent((slug as string) || "")}`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`Search results for ${slug || "products"} - TrueFacet`} />
+        <meta name="twitter:title" content={`Search results for ${slug || "products"} - Headora`} />
         <meta
           name="twitter:description"
-          content={`Explore products related to ${slug || "your search"} on TrueFacet. Get the best offers now.`}
+          content={`Explore products related to ${slug || "your search"} on Headora. Get the best offers now.`}
         />
       </Head>
 

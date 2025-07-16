@@ -13,12 +13,12 @@ const Data = [
   {
     "customer": "William",
     "score": 5,
-    "review": "I recently bought a Tiffany&Co diamond wedding band for my fiancé through TrueFacet. We both had some pretty major reservations about the purchase; it was a lot of money to spend and on a brand name, not just not from the brand itself but from a website neither of us had ever heard of. But the great deal and the return policy gave us the confidence to pull the trigger, and we couldn't be happier! The band arrived in just two days and the diamonds were beyond sparkly (certainly an exciting package to open!). We immediately took the band to our jeweler to have everything verified and appraised and, to our delight, the diamonds measured twice as big as what had been listed! We also brought the band to Tiffany to have it double checked there, and everything is legit! We had such a positive experience with TrueFacet, I would definitely consider purchasing from them again and would absolutely recommend them to anyone!"
+    "review": "I recently bought a Tiffany&Co diamond wedding band for my fiancé through Headora. We both had some pretty major reservations about the purchase; it was a lot of money to spend and on a brand name, not just not from the brand itself but from a website neither of us had ever heard of. But the great deal and the return policy gave us the confidence to pull the trigger, and we couldn't be happier! The band arrived in just two days and the diamonds were beyond sparkly (certainly an exciting package to open!). We immediately took the band to our jeweler to have everything verified and appraised and, to our delight, the diamonds measured twice as big as what had been listed! We also brought the band to Tiffany to have it double checked there, and everything is legit! We had such a positive experience with Headora, I would definitely consider purchasing from them again and would absolutely recommend them to anyone!"
   },
   {
     "customer": "AW",
     "score": 5,
-    "review": "I love ordering jewelry from TrueFacet! Super reliable, fast, and to top it off they have beautiful products! Would absolutely buy from them again and again!"
+    "review": "I love ordering jewelry from Headora! Super reliable, fast, and to top it off they have beautiful products! Would absolutely buy from them again and again!"
   },
   {
     "customer": "Renee",
@@ -28,7 +28,7 @@ const Data = [
   {
     "customer": "John",
     "score": 5,
-    "review": "TrueFacet is a reliable authenticator and valuator of watches assisting buyers and sellers. My experience is they are sincere and have excellent customer service representatives."
+    "review": "Headora is a reliable authenticator and valuator of watches assisting buyers and sellers. My experience is they are sincere and have excellent customer service representatives."
   },
   {
     "customer": "Christopher",
@@ -38,7 +38,7 @@ const Data = [
   {
     "customer": "Jason",
     "score": 5,
-    "review": "Rachel at TrueFacet worked very hard for many months to find a watch that I wanted to acquire. I had a number of companies working to locate this piece, and TrueFacet was the only company that was able to make it happen. I would highly recommend Rachel and the entire team at TrueFacet."
+    "review": "Rachel at Headora worked very hard for many months to find a watch that I wanted to acquire. I had a number of companies working to locate this piece, and Headora was the only company that was able to make it happen. I would highly recommend Rachel and the entire team at Headora."
   },
   {
     "customer": "Dawn",
@@ -58,7 +58,7 @@ const Data = [
   {
     "customer": "JP",
     "score": 5,
-    "review": "I recently purchased a watch from TrueFacet, and of course, like most people - made a last minute decision to purchase a week before I wanted to wear the watch at a special occasion (my friends wedding). I wrote an email to True Facet after purchasing the watch, and within 10 minutes on a Sunday night, their customer service manager emailed back. Through the week, I maintained contact with the manager and one other team manager, and they lived up to their promise! They made sure the watch would pass their verification process (which is normally upwards of five days already) and made sure to ship it to arrive all within an acceptable time frame. Not only did I receive a great looking luxury watch in time for the wedding (which by the way, looked exactly like those in the pictures), but they really took care of my delivery request and left me feeling like a special client. The price of the watch was by far not at the top of their list, yet I was treated as if I were buying their $200,000 Patek Phillipe. Great business model, and overall excellent staff. Due to the care I received, I would gladly recommend this company without a doubt to any of my watch wearing friends!"
+    "review": "I recently purchased a watch from Headora, and of course, like most people - made a last minute decision to purchase a week before I wanted to wear the watch at a special occasion (my friends wedding). I wrote an email to True Facet after purchasing the watch, and within 10 minutes on a Sunday night, their customer service manager emailed back. Through the week, I maintained contact with the manager and one other team manager, and they lived up to their promise! They made sure the watch would pass their verification process (which is normally upwards of five days already) and made sure to ship it to arrive all within an acceptable time frame. Not only did I receive a great looking luxury watch in time for the wedding (which by the way, looked exactly like those in the pictures), but they really took care of my delivery request and left me feeling like a special client. The price of the watch was by far not at the top of their list, yet I was treated as if I were buying their $200,000 Patek Phillipe. Great business model, and overall excellent staff. Due to the care I received, I would gladly recommend this company without a doubt to any of my watch wearing friends!"
   },
   {
     "customer": "Erwin",
@@ -68,7 +68,7 @@ const Data = [
   {
     "customer": "Rhonda",
     "score": 5,
-    "review": "Truefacet carries a great selection of quality fine jewelry. I have ordered from Trufacet several times since I became a fan in the summer of 2015. Also, the staff is very friendly, helpful and professional. I don't recall how I found Truefacet, but I'm glad I did. They carry pieces that I haven't seen before, and won't find anywhere else. I consider buying with Truefacet an investment, because the designer pieces Truefacet carries will always be valuable, and at the same time I'm getting a great price!"
+    "review": "Headora carries a great selection of quality fine jewelry. I have ordered from Trufacet several times since I became a fan in the summer of 2015. Also, the staff is very friendly, helpful and professional. I don't recall how I found Headora, but I'm glad I did. They carry pieces that I haven't seen before, and won't find anywhere else. I consider buying with Headora an investment, because the designer pieces Headora carries will always be valuable, and at the same time I'm getting a great price!"
   },
   {
     "customer": "Albert",
@@ -83,12 +83,12 @@ const Data = [
   {
     "customer": "Chris",
     "score": 5,
-    "review": "I ordered a Hublot watch from them. I had an issue with my purchase which they went above-and-beyond to resolve for me. I've never done business with a company that worked so hard to resolve an issue for me. I was willing to live with it, but they insisted they take care of it. Their communication throughout the process was exceptional and I can't thank Rachel enough for everything she did to support me. I'm thrilled with my purchase and my decision to buy from Truefacet. I will be buying from them again."
+    "review": "I ordered a Hublot watch from them. I had an issue with my purchase which they went above-and-beyond to resolve for me. I've never done business with a company that worked so hard to resolve an issue for me. I was willing to live with it, but they insisted they take care of it. Their communication throughout the process was exceptional and I can't thank Rachel enough for everything she did to support me. I'm thrilled with my purchase and my decision to buy from Headora. I will be buying from them again."
   },
   {
     "customer": "Julie",
     "score": 5,
-    "review": "My experience with TrueFacet was great. I originally picked out a watch that was sent to me very quickly. When I got the watch, it was in excellent condition and looked brand new, but it turned out not to be exactly what I was looking for. The members of the TrueFacet team were available immediately to help me find what I had in mind. They made the return process incredibly simple. They found me a perfect watch, and it came within days! It is absolutely perfect!! Outstanding customer service, will use this site again!"
+    "review": "My experience with Headora was great. I originally picked out a watch that was sent to me very quickly. When I got the watch, it was in excellent condition and looked brand new, but it turned out not to be exactly what I was looking for. The members of the Headora team were available immediately to help me find what I had in mind. They made the return process incredibly simple. They found me a perfect watch, and it came within days! It is absolutely perfect!! Outstanding customer service, will use this site again!"
   },
   {
     "customer": "Sheila",
@@ -136,7 +136,7 @@ function StaticReview() {
       <h3 className={styles.StaticTitle}>WHAT OUR CUSTOMERS SAY</h3>
       <div className={styles.StaticSlider}>
         <div className={styles.trustPilotImage}>
-        <Link href="https://www.trustpilot.com/review/truefacet.com" target="_blank" rel="nofollow noopener noreferrer noindex">
+        <Link href="https://www.trustpilot.com/review/Headora.com" target="_blank" rel="nofollow noopener noreferrer noindex">
           <Image src={"/Images/trustpilot.png"} height={40} width={200} alt="trustpilot" />
           </Link>
         </div>

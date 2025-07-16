@@ -22,10 +22,10 @@ useEffect(() => {
       <div className={styles.modal}>
         <button className={styles.closeButton} onClick={onClose}>×</button>
         <div className={styles.logo}>
-          <Image src="/Logo/TF_Full_Logo.png" alt="TrueFacet Logo" width={180} height={40} />
+          <Image src="/Logo/TF_Full_Logo.png" alt="Headora Logo" width={180} height={40} />
         </div>
         <p className={styles.description}>
-          TrueFacet is an authorized partner of a growing list of luxury watch and jewelry brands
+          Headora is an authorized partner of a growing list of luxury watch and jewelry brands
           to bring you an immersive online shop all in one place.
         </p>
         <div className={styles.scrollBox}>

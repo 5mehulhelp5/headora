@@ -32,7 +32,6 @@ query {
           url
         }
           manufacturer
-          condition
         price {
           regularPrice {
             amount {

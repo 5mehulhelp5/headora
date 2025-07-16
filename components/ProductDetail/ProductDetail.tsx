@@ -68,7 +68,7 @@ function ProductDetail({
 
   const [affirmShow, setAffirmShow] = useState<any>(false);
   const [affirmPrice, setAffirmPrice] = useState<any>("");
-  const [brandname, setBrandname] = useState<any>("TrueFacet");
+  const [brandname, setBrandname] = useState<any>("Headora");
   const [stockStatus, setStockStatus] = useState(null);
   const [loadingStockStatus, setLoadingStockStatus] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
@@ -1006,7 +1006,7 @@ function ProductDetail({
                           competitors.
                         </div>
                         <div className={styles.tooltipTitle}>CONTACT OUR CONCIERGE</div>
-                        <div className={styles.tooltipText}>support@TrueFacet.com or 1-800-690-3736.</div>
+                        <div className={styles.tooltipText}>support@Headora.com or 1-800-690-3736.</div>
                       </div>
                     </div>
                   </span>

@@ -154,7 +154,7 @@ const ProductSchema = ({ product, aggregations, schemaImage, price, metaDiscript
     "image": schemaImage,
     "brand": {
       "@type": "Brand",
-      "name": getBrandName() || "Truefacet"
+      "name": getBrandName() || "Headora"
     },
     ...(!(!material || material.length === 0) && { material }),
     ...(!(!color || color.length === 0) && { color }),
@@ -509,7 +509,7 @@ const Collection = ({ view,urlPath,allProductList, category, productsRes, collec
         <meta property="og:image:height" content="800"/>
         <meta property="og:image:type" content={`image/${fileExtension}`}/>
         <meta property="og:url" content={`${process.env.baseURLWithoutTrailingSlash}/${slug}`}/>
-        <meta property="og:site_name" content="TrueFacet"/>
+        <meta property="og:site_name" content="Headora"/>
 
 
         <meta name="twitter:card" content="summary_large_image"/>
@@ -576,7 +576,7 @@ const Collection = ({ view,urlPath,allProductList, category, productsRes, collec
         <meta name="description"
           content={metaDiscription}
         />
-        <meta name="keywords" content={productData?.meta_keyword ? productData?.meta_keyword : 'TrueFacet'} />
+        <meta name="keywords" content={productData?.meta_keyword ? productData?.meta_keyword : 'Headora'} />
 
         {/* Open Graph / Facebook Meta Tags */}
         <meta property="og:locale" content="en_US" />
@@ -588,7 +588,7 @@ const Collection = ({ view,urlPath,allProductList, category, productsRes, collec
           }
         />
         <meta property="og:url" content={`${process.env.baseURL}/${productData?.url_key}.html`} />
-        <meta property="og:site_name" content="Truefacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta property="og:image" content={schemaImage} />
         <meta property="og:image:secure_url" content={schemaImage} />
         <meta property="og:image:width" content="800" />

@@ -8,12 +8,12 @@ function PrivacyPolicy({CMSPageData}:any){
             <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{CMSPageData?.title ? CMSPageData?.title : "Terms Of Service | Truefacet"}</title>
+        <title>{CMSPageData?.title ? CMSPageData?.title : "Terms Of Service | Headora"}</title>
         <meta
           name="description"
-          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "TrueFacet provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by TrueFacet from time to time without notice to you. "}
+          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Headora provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by Headora from time to time without notice to you. "}
         />
-        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Privacy Terms Of Service | Truefacet"}></meta>
+        <meta name="keywords" content={CMSPageData?.meta_keywords ? CMSPageData?.meta_keywords : "Privacy Terms Of Service | Headora"}></meta>
         <meta
           name="robots"
        content="noindex, nofollow"
@@ -24,16 +24,16 @@ function PrivacyPolicy({CMSPageData}:any){
         />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Truefacet"} />
+        <meta property="og:title" content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Headora"} />
         <meta
           property="og:description"
-          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "TrueFacet provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by TrueFacet from time to time without notice to you. "}
+          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Headora provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by Headora from time to time without notice to you. "}
         />
         <meta
           property="og:url"
           content={`${process.env.baseURL}terms-of-service`}
         />
-        <meta property="og:site_name" content="TrueFacet" />
+        <meta property="og:site_name" content="Headora" />
         <meta
           property="og:image"
           content={`${process.env.baseURL}/Images/PrivacyPolicyOGImage.png`}
@@ -46,14 +46,14 @@ function PrivacyPolicy({CMSPageData}:any){
         <meta property="og:image:height" content="710" />
         <meta
           property="og:image:alt"
-          content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Truefacet"}
+          content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Headora"}
         />
         <meta property="og:image:type" content="image/jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Truefacet"} />
+        <meta name="twitter:title" content={CMSPageData?.title ? CMSPageData?.title : "Privacy Terms Of Service | Headora"} />
         <meta
           name="twitter:description"
-          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "TrueFacet provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by TrueFacet from time to time without notice to you. "}
+          content={CMSPageData?.meta_description ? CMSPageData?.meta_description : "Headora provides access to the Site to visitors and Registered Users (as defined below) subject to the following Terms of Use, which may be updated by Headora from time to time without notice to you. "}
         />
         <meta
           name="twitter:image"

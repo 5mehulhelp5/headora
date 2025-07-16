@@ -78,10 +78,9 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
+    font-size: 16px;
     color: #333;
     cursor: pointer;
-    letter-spacing: 0.2em;
   }
   .actionItemWrapper{
     display: flex;
@@ -100,14 +99,13 @@
 
   /* =================Drop Down============ */
   .navItem {
-    font-size: 11px;
+    font-size: 16px;
     color: #4c4d4f;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
+    text-transform: capitalize;
     
   }
   .navItem > a{

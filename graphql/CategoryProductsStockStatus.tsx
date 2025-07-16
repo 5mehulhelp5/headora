@@ -1,7 +1,7 @@
 const CategoryProductsStockStatus = (urlPath:any, currentPage:any ) => `
 
 query {
-  categoryList(filters: { url_path: { eq: "${urlPath}" } }) {
+  categoryList(filters: { url_key: { eq: "${urlPath}" } }) {
     products(pageSize: 21, currentPage: ${currentPage}) {
       total_count
       page_info {

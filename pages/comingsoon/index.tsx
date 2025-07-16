@@ -16,7 +16,7 @@ function ComingSoon() {
                 <meta property="og:image" content="https://yourdomain.com/images/coming-soon-og.jpg" />
                 <meta property="og:url" content="https://yourdomain.com/comingsoon" />
                 <meta property="og:type" content="website" />
-                <meta property="og:site_name" content="TrueFacet" />
+                <meta property="og:site_name" content="Headora" />
             </Head>
 
             <div className={style.container}>

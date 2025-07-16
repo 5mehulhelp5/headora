@@ -5,8 +5,8 @@ function AuthenticityPromiseDescription() {
   return (
     <>
       <p className={styles.AuthenticityTabSubcontent}>
-        TrueFacet promises authenticity of our products. Learn more about
-        TrueFacet's{" "}
+        Headora promises authenticity of our products. Learn more about
+        Headora's{" "}
         <Link href={"/authenticity-promise"}>authenticity promise</Link>.{" "}
       </p>
       <div id="authenticity" className={styles.AuthenticityTabContent}>
@@ -16,7 +16,7 @@ function AuthenticityPromiseDescription() {
             <div className={styles.AuthenticityAuthText}>
               We understand the importance of every jewelry and watch purchase.
               To ensure you have a seamless and secure experience with
-              TrueFacet, we offer:
+              Headora, we offer:
             </div>
             <ul className={styles.AuthenticityList}>
               <li className={styles.AuthenticityListItem}>

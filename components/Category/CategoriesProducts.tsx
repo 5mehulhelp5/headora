@@ -205,7 +205,7 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
   const fetchStockData = useCallback(async () => {
     setLoadingStockStatus(true)
     try {
-      const data = await client.fetchCategoryProductsStockStatus(categoryDetail.url_path, currentPage)
+      const data = await client.fetchCategoryProductsStockStatus(categoryDetail.url_key, currentPage)
       if (data) {
         setStockStatus(data?.data?.categoryList?.[0]?.products.items)
       }

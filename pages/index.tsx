@@ -11,7 +11,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
     if (!htmlContent) return htmlContent
 
     // Regular expression to find URLs within product-item-info divs
-    const urlPattern = /href="https:\/\/www\.truefacetnft\.com\/[^"]*"/g
+    const urlPattern = /href="https:\/\/www\.Headoranft\.com\/[^"]*"/g
 
     return htmlContent.replace(urlPattern, (match) => {
       // Extract the URL from the href attribute
@@ -29,7 +29,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
         const parts = url.split("/default/")
         if (parts.length === 2) {
           const slug = parts[1]
-          transformedUrl = `https://www.truefacetnft.com/${slug}`
+          transformedUrl = `https://www.Headoranft.com/${slug}`
         }
       }
       // Handle URLs like: /default/catalog/product/view/id/4076078/s/pre-owned-rolex-daytona-116523-steel-yellow-gold-watch/
@@ -41,7 +41,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
           if (!slug.endsWith(".html")) {
             slug += ".html"
           }
-          transformedUrl = `https://www.truefacetnft.com/${slug}`
+          transformedUrl = `https://www.Headoranft.com/${slug}`
         }
       }
 
@@ -628,7 +628,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
   const heroImage = transformedHtml?.match(/background-image.*?url\(['"]?(.*?)['"]?\)/)?.[1] || ""
   const fileExtension = heroImage.split('.').pop()?.toLowerCase() || "jpg";
   const pageUrl = `${process.env.baseURLWithoutTrailingSlash}`
-  const metaTitle = CMSPageData?.cmsPage?.meta_title || 'TrueFacet';
+  const metaTitle = CMSPageData?.cmsPage?.meta_title || 'Headora';
   const metaDescription = CMSPageData?.cmsPage?.meta_description || 'The #1 marketplace for buying, selling and trading-in fine watches & jewelry. Save on Rolex, Tiffany & Co., Cartier, Omega & more from your favorite brands.';
 
 
@@ -648,7 +648,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
         {/* SEO Meta Tags */}
         <meta name="title" content={metaTitle} />
         <meta name="description" content={metaDescription} />
-        <meta name="keywords" content={CMSPageData?.cmsPage?.meta_keywords || 'Truefacet'} />
+        <meta name="keywords" content={CMSPageData?.cmsPage?.meta_keywords || 'Headora'} />
 
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content={metaTitle} />
@@ -656,7 +656,7 @@ export default function Home({ CMSPageData, BouitqueCMSPages, showRibbon }: any)
         <meta property="og:url" content={pageUrl} />
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Truefacet" />
+        <meta property="og:site_name" content="Headora" />
 
         {/* Open Graph Image */}
         <meta property="og:image" content={heroImage} />
@@ -697,7 +697,7 @@ const HomePageSchema = ({ HeroBanner, metaDescription }: any) => {
         __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "Truefacet",
+          "name": "Headora",
           "description": metaDescription,
           "image": HeroBanner,
           "mainEntity": {
@@ -721,7 +721,7 @@ const OrganizationSchema = () => {
         __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          "name": "Truefacet",
+          "name": "Headora",
           "url": `${process.env.baseURLWithoutTrailingSlash}`,
           "logo": `${process.env.baseURLWithoutTrailingSlash}/Logo/Logo_transparent.png`,
           "contactPoint": [
@@ -735,9 +735,9 @@ const OrganizationSchema = () => {
           ],
           "sameAs": [
             "https://www.facebook.com/profile.php?id=100088095545673&amp;mibextid=LQQJ4d&amp;rdid=GzonofqiS7wvqQ9V&amp;share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FhijNeHjqKVeZ4eJM%2F%3Fmibextid%3DLQQJ4d",
-            "http://instagram.com/truefacet",
-            "http://twitter.com/truefacet",
-            "http://www.pinterest.com/truefacet"
+            "http://instagram.com/Headora",
+            "http://twitter.com/Headora",
+            "http://www.pinterest.com/Headora"
           ],
         }),
       }}
