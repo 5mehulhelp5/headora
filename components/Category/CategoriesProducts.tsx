@@ -216,6 +216,8 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
     }
   }, [categoryDetail, currentPage])
 
+  // console.log("TEST")
+
   useEffect(() => {
     fetchStockData()
   }, [fetchStockData])
