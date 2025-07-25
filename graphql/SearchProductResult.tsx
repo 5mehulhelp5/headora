@@ -78,11 +78,7 @@ query {
 }
   ... on SimpleProduct {
         # Example of custom attributes
-          ring_size
-         gender
-         condition
-         movement
-         bracelet_size
+      
    price {
         regularPrice {
           amount {
