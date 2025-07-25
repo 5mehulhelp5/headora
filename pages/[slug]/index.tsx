@@ -290,8 +290,13 @@ try {
 
   const collectionData = await client.fetchCollectionPage(urlPath as string);
   const collection = collectionData?.data?.categoryList?.[0] || null;
+  console.log("RUNNNN 1")
 
   if(collection){
+
+    console.log("RUNNNN 2")
+
+
   const category = await fetchCategoryByURLKey(urlPath as string, page) || null;
 
   const uid = category?.uid || null;
@@ -333,15 +338,18 @@ try {
   await fs.writeFile(cacheStaticPropsPath, JSON.stringify(responseData));
   return responseData;
   }else{
-    
+    console.log(urlPath,"RUNNNN 3")
     const product = await client.fetchProductDetail(urlPath);
-    let productsResult = product.data.products || null
+
+    console.log(product ,"RUNNNN 3")
+
+    let productsResult = product?.data?.products || null
     const reviews = await client.fetchAllReviewValue() || null
      const ReturnDataCMSBlock = await client.fetchPDPReturnCMSBlock() || null; 
     let { filters, optionValueMap } =  createFiltersFromAggregations(productsResult.aggregations);
     let configuredProducts =  createProductsFromMagProducts(productsResult.items, filters, optionValueMap);
     const productData = configuredProducts[0] || null;
-    const aggregations = productsResult.aggregations || [];
+    const aggregations = productsResult?.aggregations || [];
  
     let responseData={
       props: {
@@ -358,7 +366,7 @@ try {
     return responseData;
   }
 } catch (error) {
-  
+  console.log(error,"error-error")
   return {
     props: {
       allProductList: [],  
@@ -366,6 +374,7 @@ try {
       currentPage: page,  
       productsRes: null,  
       collection: null,   
+      view:'ERROR',
     },
   };
 }
@@ -373,6 +382,8 @@ try {
 
 // Collection Component
 const Collection = ({ view,urlPath,allProductList, category, productsRes, collection,categories,productData, aggregations, reviews, ReturnDataCMSBlock, categoriesList, showRibbon, isMobile}: any) => {
+
+console.log(view,"viewviewview")
 
   const [price, setPrice] = useState<any>()
   const [productBbreadcrumbs, setProductBbreadcrumbs] = useState<any>([]);
@@ -634,9 +645,9 @@ const Collection = ({ view,urlPath,allProductList, category, productsRes, collec
 }else{
   const router = useRouter();
 
-  useEffect(() => {
-    router.push('/404');
-  }, []);
+  // useEffect(() => {
+  //   router.push('/404');
+  // }, []);
 
   return null;
 }

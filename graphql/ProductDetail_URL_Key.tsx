@@ -12,7 +12,7 @@ const productsDetail = `
 `
 
 
-const fetchProductDetailURLKey = (urlKey: any) => `
+export const fetchProductDetailURLKey = (urlKey: any) => `
 query {
   products(filter: { url_key: { eq: "${urlKey}" } }) {
 aggregations {

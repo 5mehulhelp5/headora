@@ -37,6 +37,8 @@ import GET_WISHLIST_MUTATION from "./WishlistMutation";
 import GET_WISHLIST_PRODUCT_LIST from "./WishListProductList";
 import GET_WISHLIST_ID from "./GetWishListID";
 import REMOVE_WISHLIST_MUTATION from "./RemoveWishlistMutation";
+import {fetchProductDetailURLKey} from "./ProductDetail_URL_Key"
+
 export class Client {
 
     async fetchCategories() {
@@ -431,7 +433,7 @@ export class Client {
                  
             }
         } catch (error) {
-             
+            console.log(error,"error")
             return "Error"
         }
     };
