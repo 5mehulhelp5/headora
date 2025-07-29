@@ -1,16 +1,16 @@
-# Next.js Venia Project
+# Headora
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).. It is a modern, Progressive Web Application (PWA) storefront built on top of Magento 2 using Next.js and PWA Studio tools.
+Headora - Headless Magento Theme | Engineered an open-source headless e-commerce solution - Integrated Magento's GraphQL API with Next.js frontend - Implemented Static Site Generation (SSG) for optimal performance. Headora Theme is the Open Source Theme Available in Github it is accessible for everyone.
 
 ## About the Project
 
-## Next.js Magento Venia Theme Overview
+## Headora Overview
 
-The [Next.js Magento Venia Theme](https://wiki.ocodecommerce.com/en/Theme/overview) is a headless eCommerce solution that integrates Magento's GraphQL API with a Next.js frontend. This setup allows for fast, scalable, and SEO-friendly eCommerce stores with enhanced flexibility in UI/UX customization.
+The [Headora](https://wiki.ocodecommerce.com/en/Theme/overview) is a headless eCommerce solution that integrates Magento's GraphQL API with a Next.js frontend. This setup allows for fast, scalable, and SEO-friendly eCommerce stores with enhanced flexibility in UI/UX customization.
 
 ![Logo](https://dev2.diamondtrov.com/media/home.webp)
 
-### **Next.js Magento Venia Theme Pages**  
+### **Headora Pages**  
 
 - [**Home Page**](https://wiki.ocodecommerce.com/en/Theme/home-page) 
   - Displays featured products, categories, and promotional banners.  
