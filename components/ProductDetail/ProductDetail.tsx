@@ -1061,7 +1061,7 @@ function ProductDetail({
 
             <div className={styles.quantityActionWrapper}>
               {/* Quantity Selector */}
-              {/* {stockStatus === "OUT_OF_STOCK" ? (
+              {stockStatus === "OUT_OF_STOCK" ? (
                 ""
               ) : (
                 <div className={styles.quantitySelector}>
@@ -1102,7 +1102,7 @@ function ProductDetail({
                     </button>
                   </div>
                 </div>
-              )} */}
+              )}
 
               {/* Action Buttons */}
               <div className={styles.actionButtonsWrapper}>
