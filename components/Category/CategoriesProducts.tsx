@@ -919,7 +919,7 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
                                   onClick={(e) => {
                                     e.preventDefault()
                                     if (product.__typename === "ConfigurableProduct") {
-                                      router.push(`/${product.url_key}.html`)
+                                      router.push(`/${product.url_key}`)
                                     } else {
                                       handleAddToCart(productItem.id, 1)
                                     }
@@ -932,11 +932,7 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
                                   add to cart
                                 </button>
                               )}
-                            </div>
-                          )}
-
-                          <div className={styles.WishListIconWrraper}>
-                            {wishlistLoading[variantProduct.id] || wishlistItemsLoading ? (
+                                {wishlistLoading[variantProduct.id] || wishlistItemsLoading ? (
                               <div className={styles.SearchLoader}></div>
                             ) : wishlistItems[variantProduct.id] ? (
                               <button
@@ -948,8 +944,8 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
                               >
                                 <Image
                                   src="/Images/wishlistIconFill.png"
-                                  height={24}
-                                  width={27}
+                                  height={20}
+                                  width={23}
                                   alt="wishlist filled icon"
                                 />
                               </button>
@@ -961,10 +957,15 @@ function CategoriesProducts({ productsData, categoriesData, categoryDetail, show
                                 }}
                                 style={{ background: "none", border: "none", cursor: "pointer" }}
                               >
-                                <Image src="/Images/wishlistIcon.png" height={24} width={27} alt="wishlist icon" />
+                                <Image src="/Images/BlackHeart.png" height={24} width={27} alt="wishlist icon" />
                               </button>
                             )}
-                          </div>
+                            </div>
+                          )}
+
+                     
+                          
+                      
                         </Link>
 
                         {/* ---- Insert Banner After 2nd Product (Index 2 = 3rd Position) ---- */}

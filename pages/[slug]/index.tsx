@@ -634,7 +634,7 @@ console.log(view,"viewviewview")
         setPrice={setPrice} 
         ReturnDataCMSBlock={ReturnDataCMSBlock}
         showRibbon={showRibbon}/>
-          <StaticReview />
+          {/* <StaticReview /> */}
         <ReviewSection Data={productData} AllReviews={reviews} />
         <CrossSellProducts Data={productData}/>
         <UpSellProducts Data={productData}/>

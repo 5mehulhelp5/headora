@@ -17,7 +17,7 @@ function ShortDescriptionNavBars({ currentVariant, configurableOptions, Data, ag
         >
           DETAILS
         </li>
-        <li
+        {/* <li
           className={activeTab == "authenticity" ? styles.ShortDescriptionActiveTab : ""}
           onClick={() => setActiveTab("authenticity")}
         >
@@ -35,7 +35,7 @@ function ShortDescriptionNavBars({ currentVariant, configurableOptions, Data, ag
           onClick={() => setActiveTab("returns")}
         >
           RETURNS
-        </li>
+        </li> */}
       </ul>
 
       {activeTab === "details" && (
@@ -45,8 +45,8 @@ function ShortDescriptionNavBars({ currentVariant, configurableOptions, Data, ag
           aggregations={aggregations?.length > 0 ? aggregations : Data?.aggregations}
         />
       )}
-      {activeTab === "authenticity" && <AuthenticityPromiseDescription />}
-      {activeTab === "returns" && <ReturnsBlock />}
+      {/* {activeTab === "authenticity" && <AuthenticityPromiseDescription />}
+      {activeTab === "returns" && <ReturnsBlock />} */}
       
     </>
   );
