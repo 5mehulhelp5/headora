@@ -34,7 +34,7 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
   }, []);
 
   function handleShopRedirect() {
-    router.push('/jewelry.html')
+    router.push('/mens-diabetic-shoes')
 
     setTimeout(() => {
       toggleCartBag()
@@ -47,9 +47,7 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
         method: "GET",
       });
 
-
       if (response.ok) {
-        setLoaded(true);
         const data = await response.json();
 
         if (data) {
@@ -61,12 +59,11 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
             let itemDetail: any = await getProductDetails(item);
 
             if (itemDetail) {
-
               newItem['name'] = itemDetail.name;
               newItem['sku'] = itemDetail.sku;
               newItem['image_url'] = itemDetail.image.url;
             }
-            return newItem; // Return the new item
+            return newItem;
           });
 
           // Wait for all item detail promises to resolve
@@ -76,14 +73,15 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
           setCartItems(cartItemsList);
           updateCartCount(data.cart_qty);
           setformKey(data.form_key);
-
         }
+      } else {
+        updateCartCount(0);
       }
     } catch (err) {
-
-      setLoaded(true);
       updateCartCount(0);
-      // Optionally handle the error (e.g., show a notification)
+    } finally {
+      // ✅ only mark as loaded once everything is done
+      setLoaded(true);
     }
   };
 
@@ -220,7 +218,7 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
                 <div className={styles.cart_item} key={'cart_' + index} id={item.item_id}>
                   <div className={styles.item_thumbnail}>
 
-                    {item.image_url && <Link href={item.url_key+'.html'} >
+                    {item.image_url && <Link href={item.url_key} >
                       <Image width={200} height={200} src={`${item.image_url ? item.image_url.includes("cache") ? item.image_url.replace(/\/cache\/.*?\//, "/") : item.image_url : ""}`} alt={item.name} />
                     </Link>}
                   </div>
@@ -262,7 +260,7 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
                 <p><span>Taxes and shipping calculated at checkout</span></p>
                 <button onClick={() => { window.location.href = process.env.baseURL + 'checkout/' }} className={styles.buyNow}>CHECK OUT</button>
                 <p onClick={toggleCartBag} >Or</p>
-                <Link href="/checkout/cart" className={styles.buyNowLink}>View cart details</Link>
+                <div onClick={() => { window.location.href = process.env.baseURL + 'checkout/cart/' }} className={styles.buyNowLink}>View cart details</div>
               </div>
             </div></> : <>
             <div className={styles.cart_empty}>

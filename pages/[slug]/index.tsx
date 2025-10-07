@@ -420,13 +420,6 @@ console.log(view,"viewviewview")
     path: `/${slugs.slice(0, index + 1).join('/')}`,
   })),
 ];
-  // Store breadcrumbs in session storage on the client side
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('breadcrumbs', JSON.stringify(breadcrumbs));
-    }
-  }, [breadcrumbs]);
-
 
   useEffect(() => {
 
@@ -440,7 +433,7 @@ console.log(view,"viewviewview")
       }
     }
   }, []);
-//new commit//
+
 // ---------------------CategoriesProducts and Collection Meta Details------------------------------------
 
   const CategoryImage = collection?.image || '/default-image.jpg'

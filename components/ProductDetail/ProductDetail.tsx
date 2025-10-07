@@ -816,22 +816,9 @@ function ProductDetail({
       )}
 
       <div className={styles.detailContainer}>
-        {/* <nav className={styles.breadcrumb}>
-        {breadcrumbs.length === 0 && (
-          <Link href={'/'} style={{  borderRight: 'black 1px solid', padding: '0 10px 0px 0px'}}>Home</Link>
-        )}
-        {breadcrumbs.map((crumb: any, index: number) => (
-          <React.Fragment key={index}>
-             <Link href={crumb.path}>
-              <span>{crumb.name}</span>
-            </Link>
-          </React.Fragment>
-        ))}
-           <span style={{ borderRight: 'unset' }}>{displayName}</span>
-      </nav> */}
-        <div className={styles.cartegoryHeadeBreadcrumbs}>
+   <div className={styles.cartegoryHeadeBreadcrumbs}>
           {/* Render Home link if no breadcrumbs are available */}
-          {breadcrumbs && (
+              {breadcrumbs.length === 0 && (
             <>
               <Link href="/" style={{}}>
                 Home
@@ -840,7 +827,7 @@ function ProductDetail({
               <Link
                 href={`${Data?.categories?.[0]?.name === "brands" && Data?.categories?.[0]?.url_key
                     ? Data?.categories?.[0]?.url_key
-                    : Data?.categories?.[1]?.url_key || ""
+                    : Data?.categories?.[0]?.url_key || ""
                   }.html`}
               >
 
@@ -852,24 +839,24 @@ function ProductDetail({
               </Link>
 
               <span>/</span>
-              <span className={styles.ProductDisplayName}>{displayName}</span>
+              {/* <span className={styles.ProductDisplayName}>{displayName}</span> */}
             </>
           )}
 
           {/* Map through breadcrumbs */}
-          {/* {breadcrumbs.map((crumb: any, index: number) => (
+          {breadcrumbs.map((crumb: any, index: number) => (
             <React.Fragment key={index}>
               <Link href={crumb.path}>{crumb.name.replace(".html", "").length > 60
-  ? crumb.name.replace(".html", "").slice(0, 57) + "..."
-  : crumb.name.replace(".html", "")}
-</Link>
+                ? crumb.name.replace(".html", "").slice(0, 57) + "..."
+                : crumb.name.replace(".html", "")}
+              </Link>
 
-              {index < breadcrumbs.length - 1 && <span>/</span>}
+              { <span>/</span>}
             </React.Fragment>
-          ))} */}
+          ))}
 
           {/* Display the last breadcrumb as a styled span */}
-          {/* <span>{displayName}</span> */}
+          <span className={styles.ProductDisplayName}>{displayName}</span>
         </div>
 
         <div className={styles.productDetail}>
