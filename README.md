@@ -1,16 +1,14 @@
-# Headora
-
+# Headora theme
 Headora - Headless Magento Theme | Engineered an open-source headless e-commerce solution - Integrated Magento's GraphQL API with Next.js frontend - Implemented Static Site Generation (SSG) for optimal performance. Headora Theme is the Open Source Theme Available in Github it is accessible for everyone.
-
 ## About the Project
 
-## Headora Overview
+## Headora theme Overview
 
-The [Headora](https://wiki.ocodecommerce.com/en/Theme/overview) is a headless eCommerce solution that integrates Magento's GraphQL API with a Next.js frontend. This setup allows for fast, scalable, and SEO-friendly eCommerce stores with enhanced flexibility in UI/UX customization.
+The [Headora theme](https://wiki.ocodecommerce.com/en/Theme/overview) is a headless eCommerce solution that integrates Magento's GraphQL API with a Next.js frontend. This setup allows for fast, scalable, and SEO-friendly eCommerce stores with enhanced flexibility in UI/UX customization.
 
-![Logo](https://dev2.diamondtrov.com/media/home.webp)
+![Logo](https://media.discordapp.net/attachments/1363776780502171650/1425016910881362010/image.png?ex=68e60deb&is=68e4bc6b&hm=0da001f533e45cdf5b7253cbdd11db4800a04a94b1e824f0e38e4206027e80e0&=&format=webp&quality=lossless&width=1376&height=730)
 
-### **Headora Pages**  
+### **Headora theme Pages**  
 
 - [**Home Page**](https://wiki.ocodecommerce.com/en/Theme/home-page) 
   - Displays featured products, categories, and promotional banners.  
@@ -30,7 +28,6 @@ The [Headora](https://wiki.ocodecommerce.com/en/Theme/overview) is a headless eC
 Would you like me to refine or expand on any section? 🚀
 ## Key Features
 
-* **Progressive Web App (PWA):** Offline support, fast loading, and app-like experience
 * **Dynamic Routing:** Supports multi-level categories and product pages
 * **SEO Optimization:** Built-in support for meta tags, OpenGraph, and structured data (JSON-LD)
 * **Filtering and Sorting:** Advanced product filtering and sorting capabilities
@@ -55,17 +52,17 @@ To get started, clone the Next.js GitHub repository using one of the following m
 
 #### HTTPS
 ```bash
-git clone https://github.com/browsewire/eco-theme-next.git
+git clone https://github.com/ocodecommerce/headora.git
 ```
 
 #### SSH
 ```bash
-git clone git@github.com:browsewire/eco-theme-next.git
+git clone git@github.com:ocodecommerce/headora.git
 ```
 
 #### GitHub CLI
 ```bash
-gh repo clone browsewire/eco-theme-next
+gh repo clone ocodecommerce/headora
 ```
 
 Choose the method that best suits your workflow.
@@ -124,66 +121,6 @@ next-venia/
 ├── package.json        # Project dependencies and scripts
 └── README.md           # Project documentation
 ```
-
-## Useful Links
-
-### PWA Studio Documentation
-* PWA Studio Overview
-* PWA Studio Beginner Guide
-* Tools and Libraries
-* PWA Studio Best Practices
-
-### Venia Storefront
-* Venia Documentation
-* Venia UI Components
-
-### Magento Integration
-* Magento GraphQL API
-* Magento PWA Studio
-
-## Contributing
-
-We welcome contributions from the community! If you're interested in contributing to this project, please follow these steps:
-
-1. Fork the repository
-2. Create a new branch for your feature or bugfix
-3. Submit a pull request with a detailed description of your changes
-
-For more information, check out our Contribution Guide.
-
-## Deployment
-
-### Vercel
-
-The easiest way to deploy your Next.js app is to use the Vercel Platform from the creators of Next.js.
-
-1. Install the Vercel CLI:
-```bash
-npm install -g vercel
-```
-
-2. Deploy your project:
-```bash
-vercel
-```
-
-3. Follow the prompts to complete the deployment.
-
-For more details, refer to the Next.js Deployment Documentation.
-
-## Join the Conversation
-
-If you have any questions, concerns, or ideas, join our community Slack channel:
-* #pwa
-
-You can also add our public calendar to stay updated with events and announcements.
-
-## Acknowledgments
-
-This project is inspired by:
-* **Magento PWA Studio**: A collection of tools for building PWAs on Magento
-* **Venia**: A reference storefront built with PWA Studio
-* **Alpaca Theme**: A discontinued Magento 2 theme that influenced this project's design and structure
 
 ## License
 
