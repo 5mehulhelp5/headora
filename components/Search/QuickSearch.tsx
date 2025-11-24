@@ -98,7 +98,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({
             )} */}
             {searchCategory?.categories?.items?.slice(0, 3).map((item: any) => (
               <li key={item.id} className={styles.searchResultItem}>
-                <Link href={`/${item.url_key}.html`} onClick={toggleSearch} className={styles.resultLink}>
+                <Link href={`/${item.url_key}`} onClick={toggleSearch} className={styles.resultLink}>
                   <span>
                     <strong>{searchText}</strong> in {item.name}
                   </span>
@@ -118,9 +118,9 @@ const QuickSearch: React.FC<QuickSearchProps> = ({
                 <h3>PRODUCT SUGGESTIONS</h3>
               </li>
             )}
-            {searchResults?.map((item: any) => (
+            {searchResults.map((item: any) => (
               <li key={item.id} className={styles.searchResultItem}>
-                <Link href={`/${item.url_key}.html`} onClick={toggleSearch} className={styles.resultLink}>
+                <Link href={`/${item.url_key}`} onClick={toggleSearch} className={styles.resultLink}>
                   <Image
                     src={item.image?.url.replace(/\/cache\/.*?\//, "/") || "/Images/prorate_place_holder.png"}
                     alt={item.name}
@@ -145,7 +145,7 @@ const QuickSearch: React.FC<QuickSearchProps> = ({
                 listStyle: 'none'
               }}
               className={styles.searchResultItem}>
-                <Link href={`/search?q=${encodeURIComponent(searchText)}`} onClick={toggleSearch} className={styles.resultLink}>
+                <Link href={`/search?query=${encodeURIComponent(searchText)}`} onClick={toggleSearch} className={styles.resultLink}>
                 <div  className={styles.bottomsearch}>
                   <span>Search for "<strong>{searchText}</strong>"</span>
                   <span>&rarr;</span>

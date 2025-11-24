@@ -13,32 +13,30 @@ import { useRouter } from 'next/router';
 import fs from 'fs/promises';
   import path from 'path';
   import { createHash } from 'crypto';
+
+
+
+
+
+// ==================== SCHEMA COMPONENTS ====================
+
+// 1. Collection / Category Schema
 const CategorySchema = ({ category, url }: any) => {
-  // if (!category || !category.name || !category.description || !category.image) {
-  //   return null;
-  // }
-
-  return (
-
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org/",
-          "@type": "CollectionPage",
-          "name": category?.meta_title ? category?.meta_title : category?.name,
-          "description": category?.meta_description,
-          "image": category?.image,
-          "url": `${process.env.baseURLWithoutTrailingSlash}${url}`
-        }),
-      }}
-    />
-
-  );
+  if (!category) return null;
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": category?.meta_title || category?.name,
+    "description": category?.meta_description || "",
+    "image": category?.image || "https://timeluxury.com/Logo/Logo_transparent.png",
+    "url": `${process.env.baseURLForSchema}/${url}/`,
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />;
 };
 
-// BreadcrumbList Schema Component
+// 2. BreadcrumbList Schema
 const BreadcrumbSchema = ({ breadcrumbs }: any) => {
+  if (!breadcrumbs?.length) return null;
   const breadcrumbList = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -46,21 +44,47 @@ const BreadcrumbSchema = ({ breadcrumbs }: any) => {
       "@type": "ListItem",
       "position": index + 1,
       "name": breadcrumb?.name,
-      "item": index === 0
-      ? `${process.env.baseURLWithoutTrailingSlash}${breadcrumb?.path}` 
-      : `${process.env.baseURLWithoutTrailingSlash}${breadcrumb?.path}`, 
+      "item": `${process.env.baseURLForSchema}${breadcrumb?.path}/`,
     })),
   };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(breadcrumbList),
-      }}
-    />
-  );
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbList) }} />;
 };
+
+// 3. Product Schema for each product
+const ProductSchema = ({ products }: any) => {
+  if (!products?.length) return null;
+
+  const schemaList = products.map((product: any) => {
+    const mainImage = product.image?.url || product.media_gallery?.[0]?.url || "";
+    const price = product.price_range?.minimum_price?.regular_price?.value || product.price?.regularPrice?.value || 0;
+    const currency = product.price_range?.minimum_price?.regular_price?.currency || product.price?.regularPrice?.currency || "USD";
+    const availability = product.stock_status === "IN_STOCK" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": product.name,
+      "sku": product.sku,
+      "image": mainImage,
+      "description": product.description || "",
+      "category": product.categories?.map((cat: any) => cat.name).join(" > ") || "",
+      "url": `${process.env.baseURLForSchema}/${product.url_key}/`,
+      "offers": {
+        "@type": "Offer",
+        "url": `${process.env.baseURLForSchema}/${product.url_key}/`,
+        "price": price,
+        "priceCurrency": currency,
+        "availability": availability,
+      },
+    };
+  });
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaList) }} />;
+};
+
+
+
+
 
 export const getStaticPaths: GetStaticPaths = async () => {
 
@@ -276,8 +300,9 @@ const Subcategory = ({ allProductList, category, productsRes,categories, showRib
         <meta name="twitter:description" content={category?.meta_description}/>
         )}
       </Head>
-      <CategorySchema category={category} url={url}/>
-        <BreadcrumbSchema breadcrumbs={breadcrumbs}/>
+      <BreadcrumbSchema breadcrumbs={breadcrumbs} />
+      <CategorySchema category={category} url={`${slug}/${slug2}/${slug3}`} />
+      <ProductSchema products={allProductList} />
 
           <CategoryHeader Data={{ name: category?.name, description:category?.short_description }} categories={categories}/>
 

@@ -1,18 +1,43 @@
 import React, { useRef, useState, useEffect } from 'react';
-import styles from '../../styles/CartBag.module.css';
+// import './CartBag.css';
 import Link from 'next/link';
-import Image from 'next/image'
-
+import Image from 'next/image';
 import { Client } from '../../graphql/client';
 import { getFormattedCurrency, getFilePath } from '../../components/ConfigureProduct';
 import { useRouter } from 'next/router';
+import styles from '../../styles/CartBag.module.css';
 
 function CartBag({ toggleCartBag, updateCartCount }: any) {
   const client = new Client();
-  const [couponCode, setCouponCode] = useState<any>('');
+  const [couponCode, setCouponCode] = useState('');
+  const [deliveryRange, setDeliveryRange] = useState("");
+  const [cartCount, setCartCount] = useState<any>(0);
+
+
   const wrapperRef = useRef<any>(null);
-  const router = useRouter()
+  const router = useRouter();
+
+
+  function handleStorageChange() {
+    let newcartCount: any = localStorage.getItem("cartCount")
+      ? localStorage.getItem("cartCount")
+      : 0;
+    let newwshowcartBag: any = localStorage.getItem("showcartBag")
+      ? localStorage.getItem("showcartBag")
+      : "false";
+
+    if (parseInt(newcartCount) > 0) {
+      setCartCount(parseInt(newcartCount));
+      if (newwshowcartBag == "true") {
+        localStorage.setItem("showcartBag", "false");
+        // setShowCartBag(true);
+      }
+    }
+  }
+
+
   useEffect(() => {
+    handleStorageChange()
     function handleClickOutside(event: any) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         toggleCartBag()
@@ -24,20 +49,70 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
     };
   }, [wrapperRef]);
 
-  const [cartItems, setCartItems] = useState<any[]>([]);
-  const [formKey, setformKey] = useState<any>([]);
-  const [loaded, setLoaded] = useState<any>(false);
-  const [cartSubTotal, setCartSubTotal] = useState<any>([]);
+  const [cartItems, setCartItems] = useState([
+    //    {
+    //   "sku": "ROLEX-DJTTJBGMOPDND",
+    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
+    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
+    //   "item_detail": "ABC",
+    //   "url_key": "BAC",
+    //   "price": "100"
+    // },
+    // {
+    //   "sku": "ROLEX-DJTTJBGMOPDND",
+    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
+    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
+    //   "item_detail": "ABC",
+    //   "url_key": "BAC",
+    //   "price": "200"
+    // },
+    // {
+    //   "sku": "ROLEX-DJTTJBGMOPDND",
+    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
+    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
+    //   "item_detail": "ABC",
+    //   "url_key": "BAC",
+    //   "price": "100"
+    // },
+    // {
+    //   "sku": "ROLEX-DJTTJBGMOPDND",
+    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
+    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
+    //   "item_detail": "ABC",
+    //   "url_key": "BAC",
+    //   "price": "200"
+    // }
+  ]);
+  const [formKey, setFormKey] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [cartSubTotal, setCartSubTotal] = useState([]);
 
   useEffect(() => {
-    fetchCartItems()
+    fetchCartItems();
+  }, []);
+
+
+  useEffect(() => {
+    const today = new Date();
+
+    const addDays = (days:any) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + days);
+      return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+      });
+    };
+
+    const from = addDays(3);
+    const to = addDays(11);
+    setDeliveryRange(`${from} - ${to}`);
   }, []);
 
   function handleShopRedirect() {
-    router.push('/mens-diabetic-shoes')
-
+    router.push('/');
     setTimeout(() => {
-      toggleCartBag()
+      toggleCartBag();
     }, 2000);
   }
 
@@ -48,12 +123,12 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
       });
 
       if (response.ok) {
+        setLoaded(true);
         const data = await response.json();
 
         if (data) {
-          let cartItemsList = [];
-
-          // Collect promises for item details
+          console.log(data,"DATA URLKEY")
+          let cartItemsList:any = [];
           const itemPromises = data.cart_items.map(async (item: any) => {
             let newItem = { ...item };
             let itemDetail: any = await getProductDetails(item);
@@ -66,67 +141,46 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
             return newItem;
           });
 
-          // Wait for all item detail promises to resolve
           cartItemsList = await Promise.all(itemPromises);
-
-          // Update state after all items are processed
           setCartItems(cartItemsList);
           updateCartCount(data.cart_qty);
-          setformKey(data.form_key);
+          setFormKey(data.form_key);
         }
-      } else {
-        updateCartCount(0);
       }
     } catch (err) {
-      updateCartCount(0);
-    } finally {
-      // ✅ only mark as loaded once everything is done
       setLoaded(true);
+      updateCartCount(0);
     }
   };
-
 
   const getProductDetails = (item: any) => {
     try {
       return new Promise(async (resolve) => {
-        //console.log('fetchProductBySKU')
         const product = await client.fetchProductBySKU(item.sku);
-        let productData = product.data.products.items
-        return resolve(productData[0])
-        // return resolve({
-        //   "sku": "ROLEX-DJTTJBGMOPDND",
-        //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
-        //   "image": {
-        //     "url": `${process.env.baseURLWithoutTrailingSlash}/media/catalog/product/cache/859b52c65b2723b9b197f216b7f37838/2/0/2024_1215_rolex-pearlgreen_1.jpg`
-        //   }
-        // });
-      })
+        let productData = product.data.products.items;
+        return resolve(productData[0]);
+      });
     } catch (err) {
-      return ''
+      return '';
     }
-
-  }
-
-
-
+  };
 
   useEffect(() => {
-    let subtotal = 0
+    let subtotal:any = 0;
     cartItems.forEach((item: any) => {
-      let qty = item.qty ? item.qty : 1
-      let price = item.price
-      let total = price * qty
-      subtotal = subtotal + total
-    })
-    setCartSubTotal(subtotal)
+      let qty = item.qty ? item.qty : 1;
+      let price = item.price;
+      let total = price * qty;
+      subtotal = subtotal + total;
+    });
+    setCartSubTotal(subtotal);
   }, [cartItems]);
 
   const deleteItem = async (cartItem: any) => {
-
     if (typeof document !== 'undefined') {
       const element = document.getElementById(cartItem.item_id);
       if (element) {
-        element.classList.add('cart_item_deleted')
+        element.classList.add('cart_item_deleted');
       }
     }
 
@@ -138,18 +192,15 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
         },
         body: JSON.stringify({
           entity_id: parseInt(cartItem.entity_id),
-          form_key: formKey, // Use the form_key from cookies or the fetched one
+          form_key: formKey,
         }),
       });
 
       if (response.ok) {
-        fetchCartItems()
+        fetchCartItems();
       }
-    } catch (err: any) {
-
-    }
-  }
-
+    } catch (err) {}
+  };
 
   const incrementQuantity = (cartItem: any) => {
 
@@ -204,83 +255,182 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
     setCouponCode(e.target.value);
   };
 
+ 
   if (loaded) {
     return (
       <div className={styles.cart_bag_outer}>
         <div ref={wrapperRef} className={styles.cart_bag}>
-          <div className={styles.cart_bag_close} >
-            <h3>View Your Cart</h3>
-            <Image onClick={toggleCartBag} width={25} height={25} src={'/Images/cross-23-32.png'} alt="Close Modal" />
-          </div>
-          {cartItems && cartItems.length > 0 ? <>
-            <div className={styles.cart_bag_content}>
-              {cartItems.map((item: any, index: any) => (
-                <div className={styles.cart_item} key={'cart_' + index} id={item.item_id}>
-                  <div className={styles.item_thumbnail}>
+          <div className={styles.cart_bag_close}>
+        
+            <Image onClick={toggleCartBag} width={24} height={24} src="/Images/cross-23-32.png" alt="Close Cart" />
+            <h3>My Cart</h3>
 
-                    {item.image_url && <Link href={item.url_key} >
-                      <Image width={200} height={200} src={`${item.image_url ? item.image_url.includes("cache") ? item.image_url.replace(/\/cache\/.*?\//, "/") : item.image_url : ""}`} alt={item.name} />
-                    </Link>}
-                  </div>
-                  <div className={styles.item_detail}>
-                    <p><Link href={item.url_key} >{item.name}</Link></p>
-                    <p><b>SKU:</b> {item?.sku}</p>
-                    <p><b>Quantity:</b> {item?.qty ? item?.qty : 1}</p>
-                    <div className={styles.customQuantityPrice}>
-                      <p></p>
-                      <p><b>{getFormattedCurrency(item.price * (item.qty ? item.qty : 1))}</b></p>
+            <span className={styles.icon} onClick={toggleCartBag}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="icon-icon-_rq"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              {parseInt(cartCount) > 0 && (
+                <span className={styles.cartCountNumber}>{cartCount}</span>
+              )}
+            </span>
+
+          </div>
+          {cartItems && cartItems.length > 0 ? (
+            <>
+              <div className={styles.cart_bag_content}>
+                {cartItems.map((item:any, index:any) => (
+                  <div className={styles.cart_item_outer} key={'cart_' + index} id={item.item_id}>
+                  <div className={styles.cart_item} >
+
+                    <div className={styles.item_thumbnail}>
+                      {item.image_url && (
+                        <Link href={`/${item.url_key.replace('/product', '')}`}>
+                          <Image
+                            width={120}
+                            height={120}
+                            src={`${item.image_url ? item.image_url.includes("cache") ? item.image_url.replace(/\/cache\/.*?\//, "/") : item.image_url : ""}`}
+                            alt={item.name}
+                            className={styles.item_image}
+                          />
+                        </Link>
+                      )}
+                    </div>
+                    <div className={styles.item_detail}>
+                      <Link href={item.url_key.replace('/product', '')} className={styles.item_name}>{item.name}</Link>
+                      <p className={styles.item_sku}><strong>SKU:</strong> {item.sku}</p>
+
+
+
+
                     </div>
 
-                  </div>
-                  <span onClick={(e) => deleteItem(item)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                  </span>
-                </div>
-              ))}
+                    <span className={styles.delete_icon} onClick={() => deleteItem(item)}>
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                          </svg>
+                                        </span>
 
-            </div>
-            <div className={styles.cart_bag_footer}>
-              <div className={styles.couponCode}>
-                {/* <input
+
+                  </div>
+
+                    <div className={styles.comboPriceQua}>
+                    <div className={styles.custom_quantity}>
+                    <p><b>Quantity:</b> {item?.qty ? item?.qty : 1}</p>
+                    {/* <span className={styles.delete_icon} onClick={() => deleteItem(item)}>
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                          </svg>
+                                        </span> */}
+
+
+                      {/* <button className={styles.decrement_button} onClick={() => decrementQuantity(item)}>-</button> */}
+                      {/* <input
+                        type="number"
+                        value={item.qty ? item.qty : 1}
+                        onChange={(e) => handleQuantityChange(e, item)}
+                        className={styles.quantity_input}
+                        min="1"
+                        max="100"
+                      /> */}
+                      {/* <button className={styles.increment_button} onClick={() => incrementQuantity(item)}>+</button> */}
+                    </div>
+                    <p className={styles.item_price}><strong>{getFormattedCurrency(item?.price * (item?.qty ? item?.qty : 1))}</strong></p>
+                    </div>
+                    </div>
+
+
+
+                ))}
+                  <div className={styles.Order_CartOrderSummary_wrapper}>
+                  <h3>Cart Order Summary</h3>
+                <div className={styles.CartOrderSummary_wrapper}>
+
+                  <div className={styles.CartOrderSummary_container}>
+                    <div className={styles.CartOrderSummary_totalPriceContainer}>
+                      <div>Subtotal ({cartItems.length} Item{cartItems.length > 1 ? 's' : ''})</div>
+                      <span className={styles.CartOrderSummary_subTotalValue}>{getFormattedCurrency(cartSubTotal)}</span>
+                    </div>
+                    <div className={styles.CartOrderSummary_deliveryInfo}>
+                      <div>Shipping</div>
+                      <div className={styles.CartOrderSummary_deliveryAmount}>Delivery Charges if applicable</div>
+                    </div>
+                    <div className={styles.CartOrderSummary_deliveryInfo}>
+                      <div>Estimated Delivery:</div>
+                      {/* <div className={styles.CartOrderSummary_deliveryEstimate}>3 to 8 business days</div> */}
+                      <div className={styles.CartOrderSummary_deliveryEstimate}>{deliveryRange}</div>
+                    </div>
+                    <div className={styles.CartOrderSummary_divider}></div>
+                    <div className={styles.CartOrderSummary_totalPriceContainer}>
+                      <div className={styles.CartOrderSummary_totalPrice}>Total</div>
+                      <span className={styles.CartOrderSummary_totalValue}>{getFormattedCurrency(cartSubTotal)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                </div>
+              </div>
+              <div className={styles.cart_bag_footer}>
+                {/* <div className={styles.coupon_code}>
+                  <input
                     type="text"
                     value={couponCode}
-                    onChange={(e)=>handleCouponCode(e)}
-                    placeholder='Discount Coupon'
-                    className={styles.couponCodeInput}
+                    onChange={(e) => handleCouponCode(e)}
+                    placeholder="Enter Coupon Code"
+                    className={styles.coupon_code_input}
                   />
-                  <button className={styles.couponCodeButton}>Apply</button> */}
+                  <button className={styles.coupon_code_button}>Apply</button>
+                </div> */}
 
-              </div>
+{/* <div className="test123">
 
-              <div className={styles.subtotalSection}>
-                <p>Subtotal</p>
-                <p>{getFormattedCurrency(cartSubTotal)} </p>
+</div> */}
+
+                <div className={styles.subtotal_section}>
+                  <p>Subtotal</p>
+                  <p>{getFormattedCurrency(cartSubTotal)}</p>
+                </div>
+                <div className={styles.button_section}>
+                  {/* <p><span>Taxes and shipping calculated at checkout</span></p> */}
+                  <button onClick={() => { window.location.href = process.env.baseURL + 'checkout/' }} className={styles.buy_now}>Proceed to Checkout</button>
+                  {/* <p onClick={toggleCartBag}>Or</p> */}
+                  {/* <Link href="/checkout/cart" className={styles.buy_now_link}>View Cart Details</Link> */}
+                </div>
               </div>
-              <div className={styles.buttonSection}>
-                <p><span>Taxes and shipping calculated at checkout</span></p>
-                <button onClick={() => { window.location.href = process.env.baseURL + 'checkout/' }} className={styles.buyNow}>CHECK OUT</button>
-                <p onClick={toggleCartBag} >Or</p>
-                <div onClick={() => { window.location.href = process.env.baseURL + 'checkout/cart/' }} className={styles.buyNowLink}>View cart details</div>
-              </div>
-            </div></> : <>
+            </>
+          ) : (
             <div className={styles.cart_empty}>
               <div className={styles.cart_empty_inner}>
                 <Image
-                  src="/Images/emptyCart.png" // Replace with your empty cart image URL
+                  src="/Images/emptyCart.png"
                   alt="Empty Cart"
                   width={150}
                   height={150}
                 />
                 <h3>Your Cart is Empty</h3>
                 <p>Add some items to your cart to see them here.</p>
-
                 <button onClick={handleShopRedirect} className={styles.shop_button}>Start Shopping</button>
-                {/* You have no items in your shopping cart. */}
               </div>
             </div>
-          </>}
-
-
+          )}
         </div>
       </div>
     );
@@ -288,15 +438,35 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
     return (
       <div className={styles.cart_bag_outer}>
         <div ref={wrapperRef} className={styles.cart_bag}>
-          <div className={styles.cart_bag_close} >
-            <h3>View Your Cart</h3>
-            <Image onClick={toggleCartBag} width={25} height={25} src={'/Images/cross-23-32.png'} alt="Close Modal" /></div>
+          <div className={styles.cart_bag_close}>
+          <Image onClick={toggleCartBag} width={24} height={24} src="/Images/cross-23-32.png" alt="Close Cart" />
+            <h3>My Cart</h3>
 
-          <div className={styles.cart_bag_empyty}>
+            <span className={styles.icon} onClick={toggleCartBag}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="icon-icon-_rq"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              {parseInt(cartCount) > 0 && (
+                <span className={styles.cartCountNumber}>{cartCount}</span>
+              )}
+            </span>
+          </div>
+          <div className={styles.cart_bag_empty}>
             Loading...
           </div>
-
-
         </div>
       </div>
     );

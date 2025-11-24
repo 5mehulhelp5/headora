@@ -11,12 +11,14 @@
     "prebuild": "rm -rf cacheM/category/* && node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "next": "15.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swiper": "^11.1.15"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
