@@ -507,7 +507,7 @@ console.log(searchResults,'searchResults')
               setPriceRange={setPriceRange}
               highestPrice={highestPrice}
               lowestPrice={lowestPrice}
-              isLoading={isLoading}
+              isLoading={loading}
             />
 
             {totalPages > 1 && (

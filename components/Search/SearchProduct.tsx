@@ -195,8 +195,9 @@ function SearchProduct({
         <div className={hasValidAggregations ? styles.SearchProducts : styles.SearchProductsFullWidth}>
           {isLoading ? (
             <div className={styles.loadingContainer}>
-              <Image src={'/Images/animatedlogo.gif'} alt="anmated logo" height={39} width={39} style={{ marginRight: '5px' }} />
-              <div className={styles.loader}></div>
+              <div className="loader"></div>
+              {/* <Image src={'/Images/animatedlogo.gif'} alt="anmated logo" height={39} width={39} style={{ marginRight: '5px' }} /> */}
+              {/* <div className={styles.loader}></div> */}
             </div>
           ) : (
             <>
