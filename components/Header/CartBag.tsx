@@ -1,373 +1,482 @@
-import React, { useRef, useState, useEffect } from 'react';
-// import './CartBag.css';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Client } from '../../graphql/client';
-import { getFormattedCurrency, getFilePath } from '../../components/ConfigureProduct';
-import { useRouter } from 'next/router';
-import styles from '../../styles/CartBag.module.css';
+"use client"
 
-function CartBag({ toggleCartBag, updateCartCount }: any) {
-  const client = new Client();
-  const [couponCode, setCouponCode] = useState('');
-  const [deliveryRange, setDeliveryRange] = useState("");
-  const [cartCount, setCartCount] = useState<any>(0);
+import { useRef, useState, useEffect, useCallback } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import styles from "@/styles/CartBag.module.css"
 
+// Currency formatter
+const getFormattedCurrency = (price: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+};
 
-  const wrapperRef = useRef<any>(null);
-  const router = useRouter();
+interface CartItem {
+  item_id: string
+  entity_id: string
+  sku: string
+  name?: string
+  image_url?: string
+  url_key: string
+  price: number
+  qty?: number
+}
 
+interface CartBagProps {
+  toggleCartBag: () => void
+  updateCartCount: (count: number) => void
+}
 
-  function handleStorageChange() {
-    let newcartCount: any = localStorage.getItem("cartCount")
-      ? localStorage.getItem("cartCount")
-      : 0;
-    let newwshowcartBag: any = localStorage.getItem("showcartBag")
-      ? localStorage.getItem("showcartBag")
-      : "false";
+// Mock data for demo/preview
+const MOCK_CART_ITEMS: CartItem[] = [
+  {
+    item_id: "1",
+    entity_id: "101",
+    sku: "ROLEX-DJTTJBGMOPDND",
+    name: "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial",
+    image_url: "/luxury-watch-rolex-gold.jpg",
+    url_key: "/product/rolex-datejust",
+    price: 85000,
+    qty: 1,
+  },
+  {
+    item_id: "2",
+    entity_id: "102",
+    sku: "OMEGA-SEAMASTER-001",
+    name: "Omega Seamaster Diver 300M Co-Axial Master Chronometer",
+    image_url: "/omega-seamaster-diving-watch.jpg",
+    url_key: "/product/omega-seamaster",
+    price: 52000,
+    qty: 1,
+  },
+  {
+    item_id: "3",
+    entity_id: "103",
+    sku: "TAG-CARRERA-PRO",
+    name: "TAG Heuer Carrera Porsche Chronograph Special Edition",
+    image_url: "/tag-heuer-carrera-sports-watch.jpg",
+    url_key: "/product/tag-carrera",
+    price: 45000,
+    qty: 2,
+  },
+]
 
-    if (parseInt(newcartCount) > 0) {
-      setCartCount(parseInt(newcartCount));
-      if (newwshowcartBag == "true") {
-        localStorage.setItem("showcartBag", "false");
-        // setShowCartBag(true);
+function Skeleton({ className }: { className?: string }) {
+  return <div className={`${styles.skeleton} ${className || ""}`} />
+}
+
+function Spinner({ size = 20 }: { size?: number }) {
+  return (
+    <svg
+      className={styles.spinner}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle className={styles.spinner_track} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+      <path
+        className={styles.spinner_head}
+        d="M12 2a10 10 0 0 1 10 10"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+// Skeleton component for cart items
+function CartItemSkeleton() {
+  return (
+    <div className={styles.cart_item_outer}>
+      <div className={styles.cart_item}>
+        <div className={styles.item_thumbnail}>
+          <Skeleton className={styles.skeleton_image} />
+        </div>
+        <div className={styles.item_detail}>
+          <Skeleton className={styles.skeleton_title} />
+          <Skeleton className={styles.skeleton_title_short} />
+          <Skeleton className={styles.skeleton_sku} />
+        </div>
+      </div>
+      <div className={styles.comboPriceQua}>
+        <Skeleton className={styles.skeleton_qty} />
+        <Skeleton className={styles.skeleton_price} />
+      </div>
+    </div>
+  )
+}
+
+// Skeleton for order summary
+function OrderSummarySkeleton() {
+  return (
+    <div className={styles.Order_CartOrderSummary_wrapper}>
+      <Skeleton className={styles.skeleton_summary_title} />
+      <div className={styles.CartOrderSummary_wrapper}>
+        <div className={styles.CartOrderSummary_container}>
+          <div className={styles.CartOrderSummary_totalPriceContainer}>
+            <Skeleton className={styles.skeleton_label} />
+            <Skeleton className={styles.skeleton_value} />
+          </div>
+          <div className={styles.CartOrderSummary_deliveryInfo}>
+            <Skeleton className={styles.skeleton_label_sm} />
+            <Skeleton className={styles.skeleton_value_lg} />
+          </div>
+          <div className={styles.CartOrderSummary_deliveryInfo}>
+            <Skeleton className={styles.skeleton_label} />
+            <Skeleton className={styles.skeleton_value} />
+          </div>
+          <div className={styles.CartOrderSummary_divider}></div>
+          <div className={styles.CartOrderSummary_totalPriceContainer}>
+            <Skeleton className={styles.skeleton_label_sm} />
+            <Skeleton className={styles.skeleton_value} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Footer skeleton
+function FooterSkeleton() {
+  return (
+    <div className={styles.cart_bag_footer}>
+      <div className={styles.subtotal_section}>
+        <Skeleton className={styles.skeleton_label_sm} />
+        <Skeleton className={styles.skeleton_value} />
+      </div>
+      <div className={styles.button_section}>
+        <Skeleton className={styles.skeleton_button} />
+      </div>
+    </div>
+  )
+}
+
+function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
+  const [deliveryRange, setDeliveryRange] = useState("")
+  const [cartCount, setCartCount] = useState<number>(0)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [formKey, setFormKey] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null)
+  const [cartSubTotal, setCartSubTotal] = useState<number>(0)
+
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Handle storage change
+  const handleStorageChange = useCallback(() => {
+    if (typeof window === "undefined") return
+
+    const newCartCount = localStorage.getItem("cartCount")
+    const newShowCartBag = localStorage.getItem("showcartBag")
+
+    if (newCartCount && Number.parseInt(newCartCount) > 0) {
+      setCartCount(Number.parseInt(newCartCount))
+      if (newShowCartBag === "true") {
+        localStorage.setItem("showcartBag", "false")
       }
     }
-  }
+  }, [])
 
-
+  // Click outside handler
   useEffect(() => {
     handleStorageChange()
-    function handleClickOutside(event: any) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         toggleCartBag()
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [wrapperRef]);
 
-  const [cartItems, setCartItems] = useState([
-    //    {
-    //   "sku": "ROLEX-DJTTJBGMOPDND",
-    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
-    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
-    //   "item_detail": "ABC",
-    //   "url_key": "BAC",
-    //   "price": "100"
-    // },
-    // {
-    //   "sku": "ROLEX-DJTTJBGMOPDND",
-    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
-    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
-    //   "item_detail": "ABC",
-    //   "url_key": "BAC",
-    //   "price": "200"
-    // },
-    // {
-    //   "sku": "ROLEX-DJTTJBGMOPDND",
-    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
-    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
-    //   "item_detail": "ABC",
-    //   "url_key": "BAC",
-    //   "price": "100"
-    // },
-    // {
-    //   "sku": "ROLEX-DJTTJBGMOPDND",
-    //   "name": "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial Two-Tone Jubilee Bracelet Watch",
-    //   "image_url": `https://tlx.ocodecommerce.com/media/catalog/product/6/6/66631bdd1d7883058b6c2cfe.jpg`,
-    //   "item_detail": "ABC",
-    //   "url_key": "BAC",
-    //   "price": "200"
-    // }
-  ]);
-  const [formKey, setFormKey] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-  const [cartSubTotal, setCartSubTotal] = useState([]);
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [handleStorageChange, toggleCartBag])
 
+  // Calculate delivery range
   useEffect(() => {
-    fetchCartItems();
-  }, []);
-
-
-  useEffect(() => {
-    const today = new Date();
-
-    const addDays = (days:any) => {
-      const date = new Date(today);
-      date.setDate(date.getDate() + days);
+    const today = new Date()
+    const addDays = (days: number) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() + days)
       return date.toLocaleDateString("en-IN", {
         day: "numeric",
         month: "short",
-      });
-    };
+      })
+    }
+    setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
+  }, [])
 
-    const from = addDays(3);
-    const to = addDays(11);
-    setDeliveryRange(`${from} - ${to}`);
-  }, []);
+  // Fetch cart items
+  const fetchCartItems = useCallback(async () => {
+    setIsLoading(true)
 
-  function handleShopRedirect() {
-    router.push('/');
-    setTimeout(() => {
-      toggleCartBag();
-    }, 2000);
-  }
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
-  const fetchCartItems = async () => {
+    // If no API URL configured, use mock data for demo
+    // if (!baseURL) {
+    //   await new Promise((resolve) => setTimeout(resolve, 1500))
+    //   setCartItems(MOCK_CART_ITEMS)
+    //   updateCartCount?.(MOCK_CART_ITEMS.length)
+    //   setFormKey("demo_form_key")
+    //   setIsLoading(false)
+    //   return
+    // }
+
     try {
-      const response = await fetch(`${process.env.baseURL}fcprofile/sync/index`, {
+      const response = await fetch(`${baseURL}fcprofile/sync/index`, {
         method: "GET",
-      });
+      })
 
       if (response.ok) {
-        setLoaded(true);
-        const data = await response.json();
+        const contentType = response.headers.get("content-type")
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json()
+          if (data && data.cart_items) {
+            const itemPromises = data.cart_items.map(async (item: CartItem) => {
+              const newItem = { ...item }
+              return newItem
+            })
 
-        if (data) {
-          console.log(data,"DATA URLKEY")
-          let cartItemsList:any = [];
-          const itemPromises = data.cart_items.map(async (item: any) => {
-            let newItem = { ...item };
-            let itemDetail: any = await getProductDetails(item);
-
-            if (itemDetail) {
-              newItem['name'] = itemDetail.name;
-              newItem['sku'] = itemDetail.sku;
-              newItem['image_url'] = itemDetail.image.url;
-            }
-            return newItem;
-          });
-
-          cartItemsList = await Promise.all(itemPromises);
-          setCartItems(cartItemsList);
-          updateCartCount(data.cart_qty);
-          setFormKey(data.form_key);
+            const cartItemsList = await Promise.all(itemPromises)
+            setCartItems(cartItemsList)
+            updateCartCount?.(data.cart_qty || cartItemsList.length)
+            setFormKey(data.form_key || "")
+          }
+        } else {
+          // setCartItems(MOCK_CART_ITEMS)
+          // updateCartCount?.(MOCK_CART_ITEMS.length)
         }
+      } else {
+        // setCartItems(MOCK_CART_ITEMS)
+        // updateCartCount?.(MOCK_CART_ITEMS.length)
       }
     } catch (err) {
-      setLoaded(true);
-      updateCartCount(0);
+      console.warn("Cart fetch error, using mock data:", err)
+      // setCartItems(MOCK_CART_ITEMS)
+      // updateCartCount?.(MOCK_CART_ITEMS.length)
+    } finally {
+      setIsLoading(false)
     }
-  };
-
-  const getProductDetails = (item: any) => {
-    try {
-      return new Promise(async (resolve) => {
-        const product = await client.fetchProductBySKU(item.sku);
-        let productData = product.data.products.items;
-        return resolve(productData[0]);
-      });
-    } catch (err) {
-      return '';
-    }
-  };
+  }, [updateCartCount])
 
   useEffect(() => {
-    let subtotal:any = 0;
-    cartItems.forEach((item: any) => {
-      let qty = item.qty ? item.qty : 1;
-      let price = item.price;
-      let total = price * qty;
-      subtotal = subtotal + total;
-    });
-    setCartSubTotal(subtotal);
-  }, [cartItems]);
+    fetchCartItems()
+  }, [fetchCartItems])
 
-  const deleteItem = async (cartItem: any) => {
-    if (typeof document !== 'undefined') {
-      const element = document.getElementById(cartItem.item_id);
-      if (element) {
-        element.classList.add('cart_item_deleted');
-      }
+  // Calculate subtotal
+  useEffect(() => {
+    const subtotal = cartItems.reduce((acc, item) => {
+      const qty = item.qty || 1
+      return acc + item.price * qty
+    }, 0)
+    setCartSubTotal(subtotal)
+  }, [cartItems])
+
+  // Delete item handler
+  const deleteItem = async (cartItem: CartItem) => {
+    setDeletingItemId(cartItem.item_id)
+
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+
+    if (!baseURL) {
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+      setDeletingItemId(null)
+      return
     }
 
     try {
-      const response = await fetch(`${process.env.baseURL}fcprofile/cart/next`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch(`${baseURL}fcprofile/cart/next`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          entity_id: parseInt(cartItem.entity_id),
+          entity_id: Number.parseInt(cartItem.entity_id),
           form_key: formKey,
         }),
-      });
+      })
 
       if (response.ok) {
-        fetchCartItems();
-      }
-    } catch (err) {}
-  };
-
-  const incrementQuantity = (cartItem: any) => {
-
-    let newCartItems: any = []
-    cartItems.forEach((item: any, index: any) => {
-      if (item.item_id != cartItem.item_id) {
-        newCartItems.push(item)
+        await fetchCartItems()
       } else {
-        let prevQuantity = cartItem.qty ? cartItem.qty : 1
-        cartItem['qty'] = Math.min(prevQuantity + 1, 100);
-        newCartItems.push(cartItem)
+        setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
       }
-    })
-    setCartItems(newCartItems)
+    } catch (err) {
+      console.error("Error deleting item:", err)
+      setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+    } finally {
+      setDeletingItemId(null)
+    }
+  }
 
-  };
+  // Checkout handler with loading state
+  const handleCheckout = () => {
+    setIsCheckoutLoading(true)
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "/"
+    setTimeout(() => {
+      window.location.href = `${baseURL}checkout/`
+    }, 800)
+  }
 
-  const decrementQuantity = (cartItem: any) => {
+  // Shop redirect handler
+  const handleShopRedirect = () => {
+    toggleCartBag()
+  }
+  
+  useEffect(() => {
+    document.body.classList.add("body-no-scroll")
+    return () => document.body.classList.remove("body-no-scroll")
+  }, [])
+  
+  return (
+    <div className={styles.cart_bag_outer}>
+      <div ref={wrapperRef} className={styles.cart_bag}>
+        {/* Header */}
+        <div className={styles.cart_bag_close}>
+          <button onClick={toggleCartBag} className={styles.close_btn} aria-label="Close cart">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <h3>My Cart</h3>
+          <span className={styles.icon}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            {(cartItems.length > 0 || isLoading) && (
+              <span className={styles.cartCountNumber}>{isLoading ? "-" : cartItems.length}</span>
+            )}
+          </span>
+        </div>
 
-    let newCartItems: any = []
-    cartItems.forEach((item: any, index: any) => {
-      if (item.item_id != cartItem.item_id) {
-        newCartItems.push(item)
-      } else {
-        let prevQuantity = cartItem.qty ? cartItem.qty : 1
-        let newQty = Math.min(prevQuantity - 1, 100)
-        cartItem['qty'] = newQty > 0 ? newQty : 1;
-        newCartItems.push(cartItem)
-      }
-    })
-    setCartItems(newCartItems)
+        {/* Loading State - Skeleton */}
+        {isLoading && (
+          <>
+            <div className={styles.cart_bag_content}>
+              <CartItemSkeleton />
+              <CartItemSkeleton />
+              <CartItemSkeleton />
+              <OrderSummarySkeleton />
+            </div>
+            <FooterSkeleton />
+          </>
+        )}
 
-  };
-
-  const handleQuantityChange = (e: any, cartItem: any) => {
-
-
-    let newCartItems: any = []
-    cartItems.forEach((item: any, index: any) => {
-      if (item.item_id != cartItem.item_id) {
-        newCartItems.push(item)
-      } else {
-        const value = Math.max(1, Math.min(100, Number(e.target.value)));
-        cartItem['qty'] = value
-        newCartItems.push(cartItem)
-      }
-    })
-    setCartItems(newCartItems)
-  };
-
-  const handleCouponCode = (e: any) => {
-    setCouponCode(e.target.value);
-  };
-
- 
-  if (loaded) {
-    return (
-      <div className={styles.cart_bag_outer}>
-        <div ref={wrapperRef} className={styles.cart_bag}>
-          <div className={styles.cart_bag_close}>
-        
-            <Image onClick={toggleCartBag} width={24} height={24} src="/Images/cross-23-32.png" alt="Close Cart" />
-            <h3>My Cart</h3>
-
-            <span className={styles.icon} onClick={toggleCartBag}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="icon-icon-_rq"
-              >
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 0 1-8 0"></path>
-              </svg>
-              {parseInt(cartCount) > 0 && (
-                <span className={styles.cartCountNumber}>{cartCount}</span>
-              )}
-            </span>
-
-          </div>
-          {cartItems && cartItems.length > 0 ? (
-            <>
-              <div className={styles.cart_bag_content}>
-                {cartItems.map((item:any, index:any) => (
-                  <div className={styles.cart_item_outer} key={'cart_' + index} id={item.item_id}>
-                  <div className={styles.cart_item} >
-
+        {/* Loaded State - Has Items */}
+        {!isLoading && cartItems.length > 0 && (
+          <>
+            <div className={styles.cart_bag_content}>
+              {cartItems.map((item, index) => (
+                <div
+                  className={`${styles.cart_item_outer} ${
+                    deletingItemId === item.item_id ? styles.cart_item_deleting : ""
+                  }`}
+                  key={`cart_${item.item_id}_${index}`}
+                  id={item.item_id}
+                >
+                  <div className={styles.cart_item}>
                     <div className={styles.item_thumbnail}>
-                      {item.image_url && (
-                        <Link href={`/${item.url_key.replace('/product', '')}`}>
+                      {item.image_url ? (
+                        <Link href={`/${item.url_key?.replace("/product", "").replace(/^\//, "") || ""}`}>
                           <Image
                             width={120}
                             height={120}
-                            src={`${item.image_url ? item.image_url.includes("cache") ? item.image_url.replace(/\/cache\/.*?\//, "/") : item.image_url : ""}`}
-                            alt={item.name}
+                            src={
+                              item.image_url.includes("cache")
+                                ? item.image_url.replace(/\/cache\/.*?\//, "/")
+                                : item.image_url
+                            }
+                            alt={item.name || "Product"}
                             className={styles.item_image}
                           />
                         </Link>
+                      ) : (
+                        <Skeleton className={styles.skeleton_image} />
                       )}
                     </div>
                     <div className={styles.item_detail}>
-                      <Link href={item.url_key.replace('/product', '')} className={styles.item_name}>{item.name}</Link>
-                      <p className={styles.item_sku}><strong>SKU:</strong> {item.sku}</p>
-
-
-
-
+                      <Link
+                        href={`/${item.url_key?.replace("/product", "").replace(/^\//, "") || "#"}`}
+                        className={styles.item_name}
+                      >
+                        {item.name || <Skeleton className={styles.skeleton_title} />}
+                      </Link>
+                      <p className={styles.item_sku}>
+                        <strong>SKU:</strong> {item.sku}
+                      </p>
                     </div>
-
-                    <span className={styles.delete_icon} onClick={() => deleteItem(item)}>
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                          </svg>
-                                        </span>
-
-
+                    <button
+                      className={`${styles.delete_icon} ${
+                        deletingItemId === item.item_id ? styles.delete_icon_loading : ""
+                      }`}
+                      onClick={() => !deletingItemId && deleteItem(item)}
+                      disabled={!!deletingItemId}
+                      aria-label="Remove item"
+                    >
+                      {deletingItemId === item.item_id ? (
+                        <Spinner size={20} />
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          <line x1="10" y1="11" x2="10" y2="17"></line>
+                          <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                      )}
+                    </button>
                   </div>
-
-                    <div className={styles.comboPriceQua}>
+                  <div className={styles.comboPriceQua}>
                     <div className={styles.custom_quantity}>
-                    <p><b>Quantity:</b> {item?.qty ? item?.qty : 1}</p>
-                    {/* <span className={styles.delete_icon} onClick={() => deleteItem(item)}>
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                                          </svg>
-                                        </span> */}
-
-
-                      {/* <button className={styles.decrement_button} onClick={() => decrementQuantity(item)}>-</button> */}
-                      {/* <input
-                        type="number"
-                        value={item.qty ? item.qty : 1}
-                        onChange={(e) => handleQuantityChange(e, item)}
-                        className={styles.quantity_input}
-                        min="1"
-                        max="100"
-                      /> */}
-                      {/* <button className={styles.increment_button} onClick={() => incrementQuantity(item)}>+</button> */}
+                      <p>
+                        <b>Quantity:</b> {item.qty || 1}
+                      </p>
                     </div>
-                    <p className={styles.item_price}><strong>{getFormattedCurrency(item?.price * (item?.qty ? item?.qty : 1))}</strong></p>
-                    </div>
-                    </div>
+                    <p className={styles.item_price}>
+                      <strong>{getFormattedCurrency(item.price * (item.qty || 1))}</strong>
+                    </p>
+                  </div>
+                </div>
+              ))}
 
-
-
-                ))}
-                  <div className={styles.Order_CartOrderSummary_wrapper}>
-                  <h3>Cart Order Summary</h3>
+              {/* Order Summary */}
+              <div className={styles.Order_CartOrderSummary_wrapper}>
+                <h3>Cart Order Summary</h3>
                 <div className={styles.CartOrderSummary_wrapper}>
-
                   <div className={styles.CartOrderSummary_container}>
                     <div className={styles.CartOrderSummary_totalPriceContainer}>
-                      <div>Subtotal ({cartItems.length} Item{cartItems.length > 1 ? 's' : ''})</div>
-                      <span className={styles.CartOrderSummary_subTotalValue}>{getFormattedCurrency(cartSubTotal)}</span>
+                      <div>
+                        Subtotal ({cartItems.length} Item{cartItems.length > 1 ? "s" : ""})
+                      </div>
+                      <span className={styles.CartOrderSummary_subTotalValue}>
+                        {getFormattedCurrency(cartSubTotal)}
+                      </span>
                     </div>
                     <div className={styles.CartOrderSummary_deliveryInfo}>
                       <div>Shipping</div>
@@ -375,7 +484,6 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
                     </div>
                     <div className={styles.CartOrderSummary_deliveryInfo}>
                       <div>Estimated Delivery:</div>
-                      {/* <div className={styles.CartOrderSummary_deliveryEstimate}>3 to 8 business days</div> */}
                       <div className={styles.CartOrderSummary_deliveryEstimate}>{deliveryRange}</div>
                     </div>
                     <div className={styles.CartOrderSummary_divider}></div>
@@ -385,92 +493,65 @@ function CartBag({ toggleCartBag, updateCartCount }: any) {
                     </div>
                   </div>
                 </div>
-
-                </div>
-              </div>
-              <div className={styles.cart_bag_footer}>
-                {/* <div className={styles.coupon_code}>
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => handleCouponCode(e)}
-                    placeholder="Enter Coupon Code"
-                    className={styles.coupon_code_input}
-                  />
-                  <button className={styles.coupon_code_button}>Apply</button>
-                </div> */}
-
-{/* <div className="test123">
-
-</div> */}
-
-                <div className={styles.subtotal_section}>
-                  <p>Subtotal</p>
-                  <p>{getFormattedCurrency(cartSubTotal)}</p>
-                </div>
-                <div className={styles.button_section}>
-                  {/* <p><span>Taxes and shipping calculated at checkout</span></p> */}
-                  <button onClick={() => { window.location.href = process.env.baseURL + 'checkout/' }} className={styles.buy_now}>Proceed to Checkout</button>
-                  {/* <p onClick={toggleCartBag}>Or</p> */}
-                  {/* <Link href="/checkout/cart" className={styles.buy_now_link}>View Cart Details</Link> */}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className={styles.cart_empty}>
-              <div className={styles.cart_empty_inner}>
-                <Image
-                  src="/Images/emptyCart.png"
-                  alt="Empty Cart"
-                  width={150}
-                  height={150}
-                />
-                <h3>Your Cart is Empty</h3>
-                <p>Add some items to your cart to see them here.</p>
-                <button onClick={handleShopRedirect} className={styles.shop_button}>Start Shopping</button>
               </div>
             </div>
-          )}
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className={styles.cart_bag_outer}>
-        <div ref={wrapperRef} className={styles.cart_bag}>
-          <div className={styles.cart_bag_close}>
-          <Image onClick={toggleCartBag} width={24} height={24} src="/Images/cross-23-32.png" alt="Close Cart" />
-            <h3>My Cart</h3>
 
-            <span className={styles.icon} onClick={toggleCartBag}>
+            {/* Footer */}
+            <div className={styles.cart_bag_footer}>
+              <div className={styles.subtotal_section}>
+                <p>Subtotal</p>
+                <p>{getFormattedCurrency(cartSubTotal)}</p>
+              </div>
+              <div className={styles.button_section}>
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckoutLoading}
+                  className={`${styles.buy_now} ${isCheckoutLoading ? styles.buy_now_loading : ""}`}
+                >
+                  {isCheckoutLoading ? (
+                    <>
+                      <Spinner size={20} />
+                      <span className={styles.checkout_text}>Processing...</span>
+                    </>
+                  ) : (
+                    "Proceed to Checkout"
+                  )}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Empty Cart State */}
+        {!isLoading && cartItems.length === 0 && (
+          <div className={styles.cart_empty}>
+            <div className={styles.cart_empty_inner}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="120"
+                height="120"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+                stroke="#d1d5db"
+                strokeWidth="1"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="icon-icon-_rq"
               >
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
               </svg>
-              {parseInt(cartCount) > 0 && (
-                <span className={styles.cartCountNumber}>{cartCount}</span>
-              )}
-            </span>
+              <h3>Your Cart is Empty</h3>
+              <p>Add some items to your cart to see them here.</p>
+              <button onClick={handleShopRedirect} className={styles.shop_button}>
+                Start Shopping
+              </button>
+            </div>
           </div>
-          <div className={styles.cart_bag_empty}>
-            Loading...
-          </div>
-        </div>
+        )}
       </div>
-    );
-  }
+    </div>
+  )
 }
 
-export default CartBag;
+export default CartBag
