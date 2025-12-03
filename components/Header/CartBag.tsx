@@ -6,12 +6,13 @@ import Image from "next/image"
 import styles from "@/styles/CartBag.module.css"
 import { Client } from '../../graphql/client'
 
+// Currency formatter
 const getFormattedCurrency = (price: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(price)
-}
+  }).format(price);
+};
 
 interface CartItem {
   item_id: string
@@ -28,6 +29,40 @@ interface CartBagProps {
   toggleCartBag: () => void
   updateCartCount: (count: number) => void
 }
+
+// Mock data for demo/preview
+const MOCK_CART_ITEMS: CartItem[] = [
+  {
+    item_id: "1",
+    entity_id: "101",
+    sku: "ROLEX-DJTTJBGMOPDND",
+    name: "Rolex Oyster Perpetual Datejust Natural Diamond Green Mother of Pearl Dial",
+    image_url: "/luxury-watch-rolex-gold.jpg",
+    url_key: "/product/rolex-datejust",
+    price: 85000,
+    qty: 1,
+  },
+  {
+    item_id: "2",
+    entity_id: "102",
+    sku: "OMEGA-SEAMASTER-001",
+    name: "Omega Seamaster Diver 300M Co-Axial Master Chronometer",
+    image_url: "/omega-seamaster-diving-watch.jpg",
+    url_key: "/product/omega-seamaster",
+    price: 52000,
+    qty: 1,
+  },
+  {
+    item_id: "3",
+    entity_id: "103",
+    sku: "TAG-CARRERA-PRO",
+    name: "TAG Heuer Carrera Porsche Chronograph Special Edition",
+    image_url: "/tag-heuer-carrera-sports-watch.jpg",
+    url_key: "/product/tag-carrera",
+    price: 45000,
+    qty: 2,
+  },
+]
 
 function Skeleton({ className }: { className?: string }) {
   return <div className={`${styles.skeleton} ${className || ""}`} />
@@ -135,9 +170,10 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  // Handle localStorage sync
+  // Handle storage change
   const handleStorageChange = useCallback(() => {
     if (typeof window === "undefined") return
+
     const newCartCount = localStorage.getItem("cartCount")
     const newShowCartBag = localStorage.getItem("showcartBag")
 
@@ -149,11 +185,11 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     }
   }, [])
 
-  // Close on click outside
+  // Click outside handler
   useEffect(() => {
     handleStorageChange()
 
-    const handleClickOutside = (event: MouseEvent) => {
+    function handleClickOutside(event: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         toggleCartBag()
       }
@@ -161,21 +197,23 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [toggleCartBag, handleStorageChange])
+  }, [handleStorageChange, toggleCartBag])
 
-  // Delivery range
+  // Calculate delivery range
   useEffect(() => {
     const today = new Date()
     const addDays = (days: number) => {
       const date = new Date(today)
       date.setDate(date.getDate() + days)
-      return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+      return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+      })
     }
     setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
   }, [])
 
-  // Fix: Use correct env var
-  const baseURL = process.env.baseurl || ""
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || ""
 
   const getProductDetails = async (item: any) => {
     try {
@@ -188,11 +226,17 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     }
   }
 
+  // Fetch cart items
   const fetchCartItems = useCallback(async () => {
     setIsLoading(true)
 
-    // If no base URL, show empty (or mock for dev)
     if (!baseURL) {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const totalQty = MOCK_CART_ITEMS.reduce((acc, item) => acc + (item.qty || 1), 0)
+      setCartItems(MOCK_CART_ITEMS)
+      setCartCount(totalQty)
+      updateCartCount?.(totalQty)
+      setFormKey("demo_form_key")
       setIsLoading(false)
       return
     }
@@ -200,7 +244,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     try {
       const response = await fetch(`${baseURL}fcprofile/sync/index`, {
         method: "GET",
-        credentials: "include", // Important for session/auth
+        credentials: "include",
       })
 
       if (!response.ok) throw new Error("Failed to fetch cart")
@@ -208,7 +252,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       const data = await response.json()
 
       if (data?.cart_items) {
-        const itemPromises = data.cart_items.map(async (item: any) => {
+        const itemPromises = data.cart_items.map(async (item: CartItem) => {
           const newItem = { ...item }
           const details = await getProductDetails(item)
 
@@ -225,13 +269,19 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
         const cartItemsList = await Promise.all(itemPromises)
         setCartItems(cartItemsList)
         setFormKey(data.form_key || "")
-        updateCartCount(data.cart_qty || cartItemsList.length)
-        setCartCount(data.cart_qty || 0)
+        const totalQty = data.cart_qty || cartItemsList.reduce((acc, item) => acc + (item.qty || 1), 0)
+        setCartCount(totalQty)
+        updateCartCount?.(totalQty)
+      } else {
+        setCartItems([])
+        setCartCount(0)
+        updateCartCount?.(0)
       }
     } catch (err) {
       console.error("Cart sync failed:", err)
       setCartItems([])
-      updateCartCount(0)
+      setCartCount(0)
+      updateCartCount?.(0)
     } finally {
       setIsLoading(false)
     }
@@ -241,17 +291,34 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     fetchCartItems()
   }, [fetchCartItems])
 
-  // Subtotal calculation
+  // Calculate subtotal
   useEffect(() => {
-    const subtotal = cartItems.reduce((sum, item) => {
-      return sum + item.price * (item.qty || 1)
+    const subtotal = cartItems.reduce((acc, item) => {
+      const qty = item.qty || 1
+      return acc + item.price * qty
     }, 0)
     setCartSubTotal(subtotal)
   }, [cartItems])
 
-  // Delete item
+  // Delete item handler
   const deleteItem = async (cartItem: CartItem) => {
     setDeletingItemId(cartItem.item_id)
+    const el = document.getElementById(cartItem.item_id)
+    if (el) {
+      el.classList.add(styles.cart_item_deleting)
+    }
+
+    if (!baseURL) {
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      const newItems = cartItems.filter((item) => item.item_id !== cartItem.item_id)
+      const newTotalQty = newItems.reduce((acc, item) => acc + (item.qty || 1), 0)
+      setCartItems(newItems)
+      setCartCount(newTotalQty)
+      updateCartCount?.(newTotalQty)
+      if (el) el.classList.remove(styles.cart_item_deleting)
+      setDeletingItemId(null)
+      return
+    }
 
     try {
       const response = await fetch(`${baseURL}fcprofile/cart/next`, {
@@ -265,21 +332,33 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       })
 
       if (response.ok) {
-        await fetchCartItems() // Refetch to stay in sync
+        await fetchCartItems()
       } else {
-        setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+        const newItems = cartItems.filter((item) => item.item_id !== cartItem.item_id)
+        const newTotalQty = newItems.reduce((acc, item) => acc + (item.qty || 1), 0)
+        setCartItems(newItems)
+        setCartCount(newTotalQty)
+        updateCartCount?.(newTotalQty)
       }
     } catch (err) {
-      console.error("Delete failed:", err)
-      setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+      console.error("Error deleting item:", err)
+      const newItems = cartItems.filter((item) => item.item_id !== cartItem.item_id)
+      const newTotalQty = newItems.reduce((acc, item) => acc + (item.qty || 1), 0)
+      setCartItems(newItems)
+      setCartCount(newTotalQty)
+      updateCartCount?.(newTotalQty)
     } finally {
       setDeletingItemId(null)
+      if (el) {
+        el.classList.remove(styles.cart_item_deleting)
+      }
     }
   }
 
   // Checkout handler with loading state
   const handleCheckout = () => {
     setIsCheckoutLoading(true)
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "/"
     setTimeout(() => {
       window.location.href = `${baseURL}checkout/`
     }, 800)
@@ -289,13 +368,12 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const handleShopRedirect = () => {
     toggleCartBag()
   }
-
-  // Prevent body scroll when cart is open
+  
   useEffect(() => {
     document.body.classList.add("body-no-scroll")
     return () => document.body.classList.remove("body-no-scroll")
   }, [])
-
+  
   return (
     <div className={styles.cart_bag_outer}>
       <div ref={wrapperRef} className={styles.cart_bag}>
@@ -308,7 +386,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             </svg>
           </button>
           <h3>My Cart</h3>
-          <span className={styles.icon}>
+          <span className={styles.icon} onClick={toggleCartBag}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
