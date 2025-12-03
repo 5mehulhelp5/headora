@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import styles from "@/styles/CartBag.module.css"
+import { Client } from '../../graphql/client';
 
 // Currency formatter
 const getFormattedCurrency = (price: number) => {
@@ -157,6 +158,7 @@ function FooterSkeleton() {
 }
 
 function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
+  const client = new Client();
   const [deliveryRange, setDeliveryRange] = useState("")
   const [cartCount, setCartCount] = useState<number>(0)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
@@ -211,6 +213,21 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
   }, [])
 
+
+
+  const getProductDetails = (item: any) => {
+    try {
+      return new Promise(async (resolve) => {
+        const product = await client.fetchProductBySKU(item.sku);
+        let productData = product.data.products.items;
+        return resolve(productData[0]);
+      });
+    } catch (err) {
+      return '';
+    }
+  };
+
+
   // Fetch cart items
   const fetchCartItems = useCallback(async () => {
     setIsLoading(true)
@@ -234,21 +251,50 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
         method: "GET",
       })
 
+      console.log("Response status:", response)
+
       if (response.ok) {
+        console.log("Response OK:", response.ok)
+        console.log("Response headers:", response.headers)
+
         const contentType = response.headers.get("content-type")
         if (contentType && contentType.includes("application/json")) {
           const data = await response.json()
-          if (data && data.cart_items) {
-            const itemPromises = data.cart_items.map(async (item: CartItem) => {
-              const newItem = { ...item }
-              return newItem
-            })
+          // if (data && data.cart_items) {
+          //   const itemPromises = data.cart_items.map(async (item: CartItem) => {
+          //     const newItem = { ...item }
+          //     return newItem
+          //   })
 
-            const cartItemsList = await Promise.all(itemPromises)
-            setCartItems(cartItemsList)
-            updateCartCount?.(data.cart_qty || cartItemsList.length)
-            setFormKey(data.form_key || "")
+          //   const cartItemsList = await Promise.all(itemPromises)
+          //   setCartItems(cartItemsList)
+          //   updateCartCount?.(data.cart_qty || cartItemsList.length)
+          //   setFormKey(data.form_key || "")
+          // }
+
+          if (data) {
+            console.log(data,"DATA URLKEY")
+            let cartItemsList:any = [];
+            const itemPromises = data.cart_items.map(async (item: any) => {
+              let newItem = { ...item };
+              let itemDetail: any = await getProductDetails(item);
+  
+              if (itemDetail) {
+                newItem['name'] = itemDetail.name;
+                newItem['sku'] = itemDetail.sku;
+                newItem['image_url'] = itemDetail.image.url;
+              }
+              return newItem;
+            });
+  
+            cartItemsList = await Promise.all(itemPromises);
+            setCartItems(cartItemsList);
+            updateCartCount(data.cart_qty);
+            setFormKey(data.form_key);
           }
+
+
+
         } else {
           // setCartItems(MOCK_CART_ITEMS)
           // updateCartCount?.(MOCK_CART_ITEMS.length)
