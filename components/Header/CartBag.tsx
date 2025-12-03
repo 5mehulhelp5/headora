@@ -175,7 +175,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   }, [])
 
   // Fix: Use correct env var
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || ""
+  const baseURL = process.env.baseurl || ""
 
   const getProductDetails = async (item: any) => {
     try {
