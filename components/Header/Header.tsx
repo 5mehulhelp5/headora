@@ -494,7 +494,7 @@ const refinedCategories = (categories || []).map((category: any) => {
       </header>
       {showCartBag && (
         <CartBag
-          showCartBag={showCartBag}
+          // showCartBag={showCartBag}
           toggleCartBag={toggleCartBag}
           updateCartCount={updateCartCount}
         />

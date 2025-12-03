@@ -417,7 +417,7 @@ const handleMouseLeave = () => {
       </header>
       {showCartBag && (
         <CartBag
-          showCartBag={showCartBag}
+          // showCartBag={showCartBag}
           toggleCartBag={toggleCartBag}
           updateCartCount={updateCartCount}
         />
