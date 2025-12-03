@@ -215,7 +215,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const fetchCartItems = useCallback(async () => {
     setIsLoading(true)
 
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+    const baseURL = process.env.baseURL
 
     // If no API URL configured, use mock data for demo
     // if (!baseURL) {
@@ -228,6 +228,8 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     // }
 
     try {
+
+      console.log("Fetching cart items from:", `${baseURL}fcprofile/sync/index`)
       const response = await fetch(`${baseURL}fcprofile/sync/index`, {
         method: "GET",
       })
