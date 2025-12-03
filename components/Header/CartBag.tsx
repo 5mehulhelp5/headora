@@ -213,7 +213,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
   }, [])
 
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || ""
+  const baseURL = process.env.baseurl || ""
 
   const getProductDetails = async (item: any) => {
     try {
