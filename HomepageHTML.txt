@@ -1,0 +1,57 @@
+<div class="hero_section">
+<div class="hero_section_slider">
+<div class="hero_section_slide active" style="background-image: url('{{media url="wysiwyg/venia-hero1.jpg"}}');">
+<div class="hero_section_slide_left">
+<h2>Shop the New<br>Outerwear Collection</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lobortis mattis aliquam faucibus purus.</p>
+<p class="buttons_section"><a class="solid_button" href="/latest-products.html">Shop Now</a></p>
+</div>
+<div class="hero_section_slide_right">&nbsp;</div>
+</div>
+<div class="hero_section_slide" style="background-image: url('{{media url="wysiwyg/venia-hero1.jpg"}}');">
+<div class="hero_section_slide_left">
+<h2>Shop the New<br>Outerwear Collection</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lobortis mattis aliquam faucibus purus.</p>
+<p class="buttons_section_3"><a class="solid_button" href="/latest-products.html">Shop Now</a></p>
+</div>
+<div class="hero_section_slide_right">&nbsp;</div>
+</div>
+<div class="hero_section_slide" style="background-image: url('{{media url="wysiwyg/venia-hero1.jpg"}}');">
+<div class="hero_section_slide_left">
+<h2>Accessories to Keep Your Style Game Strong</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lobortis mattis aliquam faucibus purus.</p>
+<p class="buttons_section"><a class="solid_button" href="/latest-products.html">Shop Now</a></p>
+</div>
+<div class="hero_section_slide_right">&nbsp;</div>
+</div>
+</div>
+<button class="prev">&lt;</button> <button class="next">&gt;</button></div>
+<div class="slider_bullets">&nbsp;</div>
+<div class="featured_category">
+<div class="featured_box" style="background-image: url('{{media url=&quot;wysiwyg/shallow-focus-photography-of-man-wearing-eyeglasses-837306_sm.jpg&quot;}}');">
+<h3>Shop Women</h3>
+</div>
+<div class="featured_box" style="background-image: url('{{media url=&quot;wysiwyg/round-gold-colored-analog-watch-with-pink-leather-strap-on-1162519_sm.jpg&quot;}}');">
+<h3>Shop Men</h3>
+</div>
+<div class="featured_box" style="background-image: url('{{media url=&quot;wysiwyg/shallow-focus-photography-of-man-wearing-eyeglasses-837306_sm.jpg&quot;}}');">
+<h3>Whats New</h3>
+</div>
+</div>
+<div class="section_row">
+<div class="section_row_left">
+<h4>Make a Statement in Signature Heels</h4>
+<h5>Lorem Ipsum Dolor Tempor</h5>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lobortis mattis aliquam faucibus purus.</p>
+<p class="buttons_section"><a class="border_button" href="/latest-products.html">Shop Heels</a> <a class="border_button" href="/latest-products.html">Shop All Shoes</a></p>
+</div>
+<div class="section_row_right" style="background: url('{{media url=&quot;wysiwyg/AdobeStock_268178800_sm.jpg&quot;}}'); background-size: contain; background-repeat: no-repeat;">&nbsp;</div>
+</div>
+<div class="section_row_left_large_2">
+<div class="section_row_left_2" style="background: url('{{media url=&quot;wysiwyg/woman-wearing-orange-dress-3503488_sm.jpg&quot;}}'); background-repeat: no-repeat; background-size: inherit; background-position: center;">&nbsp;</div>
+<div class="section_row_right_2">
+<h4>Vacations meet fresh style</h4>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing.</p>
+<p class="buttons_section_3"><a class="solid_button" href="/latest-products.html">Shop Now</a></p>
+</div>
+</div>
