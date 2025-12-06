@@ -1,11 +1,9 @@
 "use client"
-
 import { useRef, useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import styles from "@/styles/CartBag.module.css"
 import { Client } from '../../graphql/client'
-
 // Currency formatter
 const getFormattedCurrency = (price: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -13,7 +11,6 @@ const getFormattedCurrency = (price: number) => {
     currency: "USD",
   }).format(price);
 };
-
 interface CartItem {
   item_id: string
   entity_id: string
@@ -24,16 +21,13 @@ interface CartItem {
   price: number
   qty?: number
 }
-
 interface CartBagProps {
   toggleCartBag: () => void
   updateCartCount: (count: number) => void
 }
-
 function Skeleton({ className }: { className?: string }) {
   return <div className={`${styles.skeleton} ${className || ""}`} />
 }
-
 function Spinner({ size = 20 }: { size?: number }) {
   return (
     <svg
@@ -55,7 +49,6 @@ function Spinner({ size = 20 }: { size?: number }) {
     </svg>
   )
 }
-
 // Skeleton component for cart items
 function CartItemSkeleton() {
   return (
@@ -77,7 +70,6 @@ function CartItemSkeleton() {
     </div>
   )
 }
-
 // Skeleton for order summary
 function OrderSummarySkeleton() {
   return (
@@ -107,7 +99,6 @@ function OrderSummarySkeleton() {
     </div>
   )
 }
-
 // Footer skeleton
 function FooterSkeleton() {
   return (
@@ -122,7 +113,6 @@ function FooterSkeleton() {
     </div>
   )
 }
-
 function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const client = new Client()
   const [deliveryRange, setDeliveryRange] = useState("")
@@ -133,32 +123,45 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null)
   const [cartSubTotal, setCartSubTotal] = useState<number>(0)
-
   const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // Handle localStorage sync
-  const handleStorageChange = useCallback(() => {
-    if (typeof window === "undefined") return
-    const count = localStorage.getItem("cartCount")
-    if (count && parseInt(count) > 0) {
-      setCartCount(parseInt(count))
-    }
-  }, [])
-
   // Close on click outside
+  // Handle localStorage sync via storage event
   useEffect(() => {
-    handleStorageChange()
+    const handleStorageChange = (e: StorageEvent) => {
+      if (typeof window === "undefined") return
+      if (e.key === "cartCount") {
+        const count = e.newValue ? parseInt(e.newValue) : 0
+        setCartCount(count)
+        updateCartCount(count)
+      }
+      if (e.key === "showcartBag" && e.newValue === "true") {
+        // Auto-open the cart (assumes cart is closed when adding from PDP; toggles to open)
+        // If cart is already open, this would close it—consider adding state checks if needed
+        toggleCartBag()
+        localStorage.removeItem("showcartBag")
+      }
+    }
+
+    // Initial load from localStorage
+    const initialCount = localStorage.getItem("cartCount")
+    if (initialCount && parseInt(initialCount) > 0) {
+      setCartCount(parseInt(initialCount))
+      updateCartCount(parseInt(initialCount))
+    }
 
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         toggleCartBag()
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [toggleCartBag, handleStorageChange])
+    window.addEventListener("storage", handleStorageChange)
 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+      window.removeEventListener("storage", handleStorageChange)
+    }
+  }, [toggleCartBag, updateCartCount])
   // Delivery range
   useEffect(() => {
     const today = new Date()
@@ -169,10 +172,8 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     }
     setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
   }, [])
-
   // Fix: Use correct env var (Next.js public vars must start with NEXT_PUBLIC_)
   const baseURL = process.env.baseURL || ""
-
   const getProductDetails = async (item: any) => {
     try {
       const product = await client.fetchProductBySKU(item.sku)
@@ -183,41 +184,32 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       return null
     }
   }
-
   const fetchCartItems = useCallback(async () => {
     setIsLoading(true)
-
     // If no base URL, show empty (or mock for dev)
     if (!baseURL) {
       setIsLoading(false)
       return
     }
-
     try {
       const response = await fetch(`${baseURL}fcprofile/sync/index`, {
         method: "GET",
         credentials: "include", // Important for session/auth
       })
-
       if (!response.ok) throw new Error("Failed to fetch cart")
-
       const data = await response.json()
-
       if (data?.cart_items) {
         const itemPromises = data.cart_items.map(async (item: any) => {
           const newItem = { ...item }
           const details = await getProductDetails(item)
-
           if (details) {
             newItem.name = details.name
             newItem.sku = details.sku
             newItem.image_url = details.image?.url || ""
             newItem.url_key = details.url_key || ""
           }
-
           return newItem
         })
-
         const cartItemsList = await Promise.all(itemPromises)
         setCartItems(cartItemsList)
         setFormKey(data.form_key || "")
@@ -232,11 +224,9 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       setIsLoading(false)
     }
   }, [baseURL, updateCartCount])
-
   useEffect(() => {
     fetchCartItems()
   }, [fetchCartItems])
-
   // Subtotal calculation
   useEffect(() => {
     const subtotal = cartItems.reduce((sum, item) => {
@@ -244,11 +234,9 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     }, 0)
     setCartSubTotal(subtotal)
   }, [cartItems])
-
   // Delete item handler
   const deleteItem = async (cartItem: CartItem) => {
     setDeletingItemId(cartItem.item_id)
-
     try {
       const response = await fetch(`${baseURL}fcprofile/cart/next`, {
         method: "POST",
@@ -259,7 +247,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
           form_key: formKey,
         }),
       })
-
       if (response.ok) {
         await fetchCartItems() // Refetch to stay in sync
       } else {
@@ -272,7 +259,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       setDeletingItemId(null)
     }
   }
-
   // Checkout handler with loading state
   const handleCheckout = () => {
     setIsCheckoutLoading(true)
@@ -280,18 +266,15 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
       window.location.href = `${baseURL}checkout/`
     }, 800)
   }
-
   // Shop redirect handler
   const handleShopRedirect = () => {
     toggleCartBag()
   }
-
   // Prevent body scroll when cart is open
   useEffect(() => {
     document.body.classList.add("body-no-scroll")
     return () => document.body.classList.remove("body-no-scroll")
   }, [])
-
   return (
     <div className={styles.cart_bag_outer}>
       <div ref={wrapperRef} className={styles.cart_bag}>
@@ -327,7 +310,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             )}
           </span>
         </div>
-
         {/* Loading State - Skeleton */}
         {isLoading && (
           <>
@@ -340,7 +322,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             <FooterSkeleton />
           </>
         )}
-
         {/* Has Items */}
         {!isLoading && cartItems.length > 0 && (
           <>
@@ -371,14 +352,12 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                         </Link>
                       )}
                     </div>
-
                     <div className={styles.item_detail}>
                       <Link href={`/${item.url_key?.replace("/product", "").replace(/^\//, "") || ""}`} className={styles.item_name}>
                         {item.name}
                       </Link>
                       <p className={styles.item_sku}><strong>SKU:</strong> {item.sku}</p>
                     </div>
-
                     <button
                       className={`${styles.delete_icon} ${
                         deletingItemId === item.item_id ? styles.delete_icon_loading : ""
@@ -399,7 +378,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                       )}
                     </button>
                   </div>
-
                   <div className={styles.comboPriceQua}>
                     <div className={styles.custom_quantity}>
                       <p><b>Quantity:</b> {item.qty || 1}</p>
@@ -410,7 +388,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                   </div>
                 </div>
               ))}
-
               {/* Order Summary */}
               <div className={styles.Order_CartOrderSummary_wrapper}>
                 <h3>Cart Order Summary</h3>
@@ -437,7 +414,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                 </div>
               </div>
             </div>
-
             {/* Footer */}
             <div className={styles.cart_bag_footer}>
               <div className={styles.subtotal_section}>
@@ -463,7 +439,6 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             </div>
           </>
         )}
-
         {/* Empty State */}
         {!isLoading && cartItems.length === 0 && (
           <div className={styles.cart_empty}>
@@ -486,5 +461,4 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     </div>
   )
 }
-
 export default CartBag
