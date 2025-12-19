@@ -249,7 +249,10 @@ const handleMouseLeave = () => {
             </svg>
           )}
         </div>
- <div className={styles.contactUsDropdownContainer} onMouseEnter={handleMouseEnter}
+
+
+
+ {/* <div className={styles.contactUsDropdownContainer} onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}>
           <span className={styles.contactUsToggle} style={{fontSize:'12px'}} >
             <Image
@@ -277,7 +280,10 @@ const handleMouseLeave = () => {
               </a>
             </ul>
           </div> 
-           </div>
+           </div> */}
+
+
+
         <div className={styles.logo}>
           <Link href={"/"}>
             {process.env.logoURL?.length == 0 ? (

@@ -7,7 +7,8 @@ import CartBag from "./CartBag";
 import { useRouter } from "next/router";
 import QuickSearch from "../Search/QuickSearch";
 
-function Header({ categoriesList }: any) {
+function Header({ categoriesList,megamenu }: any) {
+  console.log(megamenu,"megamenu")
   const [isSearchOpen, setSearchOpen] = useState<boolean>(false); // New state for search input
   const [searchText, setSearchText] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any>(); // Store search results
@@ -16,9 +17,9 @@ function Header({ categoriesList }: any) {
   const [showCartBag, setShowCartBag] = useState(false);
   const [cartCount, setCartCount] = useState<any>(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const categories = categoriesList?.data?.categories?.items[0]?.children || [];
+  // const categories = categoriesList?.data?.categories?.items[0]?.children || [];
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [categories, setCategories] = useState(categoriesList?.data?.categories?.items[0]?.children || [])
   const client = new Client();
   const router = useRouter();
 
@@ -38,6 +39,95 @@ function Header({ categoriesList }: any) {
       }
     }
   }
+
+
+  const sortOnlyChildrenAlphabetically = (items: any[]): any[] => {
+    if (!Array.isArray(items)) return items;
+  
+    return items.map((item: any) => ({
+      ...item,
+      children: Array.isArray(item?.children)
+        ? item.children
+            .slice()
+            .sort((a: any, b: any) =>
+              String(a?.name || "").localeCompare(String(b?.name || ""))
+            )
+            .map((child: any) => ({
+              ...child,
+              children: sortOnlyChildrenAlphabetically(child?.children),
+            }))
+        : item?.children,
+    }));
+  };
+
+
+  useEffect(() => {
+    const fetchMegaMenu = async () => {
+      try {
+        setLoading(true);
+  
+        // 1️⃣ Try the new megaMenuJson API first
+            {/* Change bottom feom refiend cat to categories to ADD MEGA Menu */}
+            
+        const data = megamenu?.data
+        // const data:any = []
+console.log(data,"data")
+        if (data){
+     
+
+  
+        let menuItems: any[] = [];
+  
+        if (data?.megaMenuJson?.success && Array.isArray(data.megaMenuJson.items)) {
+
+          console.log("✅ Good Going");
+          // ✅ New API structure (already JSON)
+          menuItems = data.megaMenuJson.items.map((item: any, i: number) => ({
+            uid: item.uid || `menu-${i}`,
+            name: item.title,
+            url_path: item.link_url?.replace(/\.html$/, "") || "",
+            image: item.image || "",
+            children:
+              item.children?.map((child: any, j: number) => ({
+                uid: child.uid || `menu-${i}-${j}`,
+                name: child.title,
+                url_path: child.link_url?.replace(/\.html$/, "") || "",
+                children:
+                  child.children?.map((sub: any, k: number) => ({
+                    uid: sub.uid || `menu-${i}-${j}-${k}`,
+                    name: sub.title,
+                    url_path: sub.link_url?.replace(/\.html$/, "") || "",
+                    children: sub.children || [],
+                  })) || [],
+              })) || [],
+          }));
+
+
+        } else if (categoriesList?.data?.categories?.items?.[0]?.children) {
+          console.log("✅ Fallback to Magento categories API structure");
+          // ✅ Fallback to Magento categories API structure
+          menuItems = categoriesList.data.categories.items[0].children;
+        } else {
+          console.warn("⚠️ No valid menu data found from either API");
+        }
+  
+        // setCategories(menuItems);
+        setCategories(sortOnlyChildrenAlphabetically(menuItems));
+
+      }else{
+        setLoading(false);
+      }
+      } catch (error) {
+        console.error("Error fetching mega menu:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchMegaMenu();
+  }, []);
+
+
   useEffect(() => {
     const handleRouteChange = () => {
       setLoading(false);
@@ -183,7 +273,7 @@ const refinedCategories = (categories || []).map((category: any) => {
             )}
           </Link>
         </div>
-        <div className={styles.contactUsDropdownContainer} onMouseEnter={handleMouseEnter}
+        {/* <div className={styles.contactUsDropdownContainer} onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}>
           <span className={styles.contactUsToggle} style={{ fontSize: '12px' }} >
             <Image
@@ -213,10 +303,10 @@ const refinedCategories = (categories || []).map((category: any) => {
               </a>
             </ul>
           </div>
-        </div>
+        </div> */}
         <nav className={styles.nav}>
           <ul className={styles.navItems}>
-            {refinedCategories.map((category: any) => (
+            {categories.map((category: any) => (
               <li
                 key={category.uid}
                 className={styles.navItem}

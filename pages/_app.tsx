@@ -11,7 +11,7 @@ import TopRibbon from "@/components/TopRibbon/TopRibbon";
 import { AuthProvider } from "../context/auth-context";
 
 let cachedData: any = null; 
-function App({ categoriesList, Component, pageProps, ribbonResponce,
+function App({ categoriesList, Component, pageProps, ribbonResponce, MegaMenu,
     BoutiqueCategoriesList
   }: any) {
    
@@ -95,7 +95,7 @@ function App({ categoriesList, Component, pageProps, ribbonResponce,
               BoutiqueCategoriesList={BoutiqueCategoriesList}
             />
       
-          <Header categoriesList={ categoriesList} 
+          <Header categoriesList={categoriesList} megamenu={MegaMenu}
            BoutiqueCategoriesList={ BoutiqueCategoriesList} 
            />
       
@@ -111,11 +111,16 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   if (!cachedData) {
     const client = new Client();
     const response = await client.fetchCategories();
+    const data = await client.fetchMegaMenu();
+    console.log(data,"data")
+
     const ribbonResponce = await client.fetchTopRibbion();
      const Boutiqueresponse = await client.fetchBoutiqueCategories();
+
     cachedData = { categoriesList: response, 
+         MegaMenu:data,
          BoutiqueCategoriesList: Boutiqueresponse,
-       ribbonResponce };
+         ribbonResponce };
   } 
   return cachedData;
 

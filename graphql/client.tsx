@@ -37,6 +37,7 @@ import GET_WISHLIST_MUTATION from "./WishlistMutation";
 import GET_WISHLIST_PRODUCT_LIST from "./WishListProductList";
 import GET_WISHLIST_ID from "./GetWishListID";
 import REMOVE_WISHLIST_MUTATION from "./RemoveWishlistMutation";
+import fetchMegaMenuQuery from "./MegaMenu";
 import {fetchProductDetailURLKey} from "./ProductDetail_URL_Key"
 
 export class Client {
@@ -64,6 +65,34 @@ export class Client {
             return "Error"
         }
     };
+
+
+
+    async fetchMegaMenu() {
+        try {
+
+            const response = await fetch(`${process.env.magentoEndpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: fetchMegaMenuQuery }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return data
+            } else {
+                // Handle errors
+
+            }
+        } catch (error) {
+
+            return "Error"
+        }
+    };
+
+
     async fetchBoutiqueCategories() {
         try {
 
