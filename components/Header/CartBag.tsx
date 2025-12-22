@@ -4,6 +4,8 @@ import Link from "next/link"
 import Image from "next/image"
 import styles from "@/styles/CartBag.module.css"
 import { Client } from '../../graphql/client'
+import { ShoppingCart } from "lucide-react"
+
 // Currency formatter
 const getFormattedCurrency = (price: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -11,6 +13,7 @@ const getFormattedCurrency = (price: number) => {
     currency: "USD",
   }).format(price);
 };
+
 interface CartItem {
   item_id: string
   entity_id: string
@@ -21,13 +24,16 @@ interface CartItem {
   price: number
   qty?: number
 }
+
 interface CartBagProps {
   toggleCartBag: () => void
   updateCartCount: (count: number) => void
 }
+
 function Skeleton({ className }: { className?: string }) {
   return <div className={`${styles.skeleton} ${className || ""}`} />
 }
+
 function Spinner({ size = 20 }: { size?: number }) {
   return (
     <svg
@@ -49,7 +55,8 @@ function Spinner({ size = 20 }: { size?: number }) {
     </svg>
   )
 }
-// Skeleton component for cart items
+
+// Skeleton components remain unchanged
 function CartItemSkeleton() {
   return (
     <div className={styles.cart_item_outer}>
@@ -70,7 +77,7 @@ function CartItemSkeleton() {
     </div>
   )
 }
-// Skeleton for order summary
+
 function OrderSummarySkeleton() {
   return (
     <div className={styles.Order_CartOrderSummary_wrapper}>
@@ -99,7 +106,7 @@ function OrderSummarySkeleton() {
     </div>
   )
 }
-// Footer skeleton
+
 function FooterSkeleton() {
   return (
     <div className={styles.cart_bag_footer}>
@@ -113,6 +120,7 @@ function FooterSkeleton() {
     </div>
   )
 }
+
 function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const client = new Client()
   const [deliveryRange, setDeliveryRange] = useState("")
@@ -123,46 +131,88 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null)
   const [cartSubTotal, setCartSubTotal] = useState<number>(0)
+  
+  // Track local open state to prevent conflicts
+  const [isOpen, setIsOpen] = useState(true)
+
   const wrapperRef = useRef<HTMLDivElement>(null)
-  // Close on click outside
-  // Handle localStorage sync via storage event
+  const baseURL = process.env.baseURL || "" // Fixed: use NEXT_PUBLIC_ for client-side
+
+  // === Prevent background scroll when cart is open ===
+  useEffect(() => {
+    document.body.classList.add("body-no-scroll")
+
+    return () => {
+      document.body.classList.remove("body-no-scroll")
+    }
+  }, [])
+
+  // === Click outside to close (but not during loading) ===
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        // Prevent closing while loading to avoid flash/reopen bug
+        if (isLoading) return
+
+        // Clear any pending auto-open flag
+        localStorage.removeItem("showcartBag")
+
+        toggleCartBag()
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [toggleCartBag, isLoading])
+
+  // === Handle localStorage sync & auto-open safely ===
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (typeof window === "undefined") return
       if (e.key === "cartCount") {
         const count = e.newValue ? parseInt(e.newValue) : 0
         setCartCount(count)
         updateCartCount(count)
       }
+
       if (e.key === "showcartBag" && e.newValue === "true") {
-        // Auto-open the cart (assumes cart is closed when adding from PDP; toggles to open)
-        // If cart is already open, this would close it—consider adding state checks if needed
-        toggleCartBag()
+        // Only open if currently closed and not loading
+        if (!isOpen && !isLoading) {
+          toggleCartBag()
+          setIsOpen(true)
+        }
         localStorage.removeItem("showcartBag")
       }
     }
 
-    // Initial load from localStorage
+    // Initial load checks
     const initialCount = localStorage.getItem("cartCount")
-    if (initialCount && parseInt(initialCount) > 0) {
-      setCartCount(parseInt(initialCount))
-      updateCartCount(parseInt(initialCount))
+    if (initialCount) {
+      const count = parseInt(initialCount)
+      setCartCount(count)
+      updateCartCount(count)
     }
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+    // Handle pending auto-open on mount
+    if (localStorage.getItem("showcartBag") === "true") {
+      if (!isOpen) {
         toggleCartBag()
+        setIsOpen(true)
       }
+      localStorage.removeItem("showcartBag")
     }
-    document.addEventListener("mousedown", handleClickOutside)
+
     window.addEventListener("storage", handleStorageChange)
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
       window.removeEventListener("storage", handleStorageChange)
     }
-  }, [toggleCartBag, updateCartCount])
-  // Delivery range
+  }, [toggleCartBag, updateCartCount, isOpen, isLoading])
+
+  // === Delivery range ===
   useEffect(() => {
     const today = new Date()
     const addDays = (days: number) => {
@@ -172,32 +222,37 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
     }
     setDeliveryRange(`${addDays(3)} - ${addDays(11)}`)
   }, [])
-  // Fix: Use correct env var (Next.js public vars must start with NEXT_PUBLIC_)
-  const baseURL = process.env.baseURL || ""
+
+  // === Fetch product details ===
   const getProductDetails = async (item: any) => {
     try {
       const product = await client.fetchProductBySKU(item.sku)
-      const productData = product?.data?.products?.items?.[0]
-      return productData || null
+      return product?.data?.products?.items?.[0] || null
     } catch (err) {
       console.error("Failed to fetch product details for SKU:", item.sku)
       return null
     }
   }
+
+  // === Fetch cart items ===
   const fetchCartItems = useCallback(async () => {
     setIsLoading(true)
-    // If no base URL, show empty (or mock for dev)
+
     if (!baseURL) {
       setIsLoading(false)
       return
     }
+
     try {
       const response = await fetch(`${baseURL}fcprofile/sync/index`, {
         method: "GET",
-        credentials: "include", // Important for session/auth
+        credentials: "include",
       })
+
       if (!response.ok) throw new Error("Failed to fetch cart")
+
       const data = await response.json()
+
       if (data?.cart_items) {
         const itemPromises = data.cart_items.map(async (item: any) => {
           const newItem = { ...item }
@@ -210,31 +265,39 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
           }
           return newItem
         })
+
         const cartItemsList = await Promise.all(itemPromises)
         setCartItems(cartItemsList)
         setFormKey(data.form_key || "")
-        updateCartCount(data.cart_qty || cartItemsList.length)
-        setCartCount(data.cart_qty || 0)
+        const qty = data.cart_qty || cartItemsList.length
+        setCartCount(qty)
+        updateCartCount(qty)
+      } else {
+        setCartItems([])
+        setCartCount(0)
+        updateCartCount(0)
       }
     } catch (err) {
       console.error("Cart sync failed:", err)
       setCartItems([])
+      setCartCount(0)
       updateCartCount(0)
     } finally {
       setIsLoading(false)
     }
   }, [baseURL, updateCartCount])
+
   useEffect(() => {
     fetchCartItems()
   }, [fetchCartItems])
-  // Subtotal calculation
+
+  // === Subtotal calculation ===
   useEffect(() => {
-    const subtotal = cartItems.reduce((sum, item) => {
-      return sum + item.price * (item.qty || 1)
-    }, 0)
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.qty || 1), 0)
     setCartSubTotal(subtotal)
   }, [cartItems])
-  // Delete item handler
+
+  // === Delete item ===
   const deleteItem = async (cartItem: CartItem) => {
     setDeletingItemId(cartItem.item_id)
     try {
@@ -247,34 +310,32 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
           form_key: formKey,
         }),
       })
+
       if (response.ok) {
-        await fetchCartItems() // Refetch to stay in sync
+        await fetchCartItems()
       } else {
-        setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+        setCartItems(prev => prev.filter(item => item.item_id !== cartItem.item_id))
       }
     } catch (err) {
       console.error("Delete failed:", err)
-      setCartItems((prev) => prev.filter((item) => item.item_id !== cartItem.item_id))
+      setCartItems(prev => prev.filter(item => item.item_id !== cartItem.item_id))
     } finally {
       setDeletingItemId(null)
     }
   }
-  // Checkout handler with loading state
+
+  // === Checkout ===
   const handleCheckout = () => {
     setIsCheckoutLoading(true)
     setTimeout(() => {
       window.location.href = `${baseURL}checkout/`
     }, 800)
   }
-  // Shop redirect handler
+
   const handleShopRedirect = () => {
     toggleCartBag()
   }
-  // Prevent body scroll when cart is open
-  useEffect(() => {
-    document.body.classList.add("body-no-scroll")
-    return () => document.body.classList.remove("body-no-scroll")
-  }, [])
+
   return (
     <div className={styles.cart_bag_outer}>
       <div ref={wrapperRef} className={styles.cart_bag}>
@@ -290,17 +351,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
           />
           <h3>My Cart</h3>
           <span className={styles.icon}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -310,7 +361,8 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             )}
           </span>
         </div>
-        {/* Loading State - Skeleton */}
+
+        {/* Loading State */}
         {isLoading && (
           <>
             <div className={styles.cart_bag_content}>
@@ -322,16 +374,15 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             <FooterSkeleton />
           </>
         )}
+
         {/* Has Items */}
         {!isLoading && cartItems.length > 0 && (
           <>
             <div className={styles.cart_bag_content}>
               {cartItems.map((item, index) => (
                 <div
-                  className={`${styles.cart_item_outer} ${
-                    deletingItemId === item.item_id ? styles.cart_item_deleting : ""
-                  }`}
-                  key={'cart_' + item.item_id + '_' + index}
+                  className={`${styles.cart_item_outer} ${deletingItemId === item.item_id ? styles.cart_item_deleting : ""}`}
+                  key={`cart_${item.item_id}_${index}`}
                   id={item.item_id}
                 >
                   <div className={styles.cart_item}>
@@ -341,11 +392,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                           <Image
                             width={120}
                             height={120}
-                            src={
-                              item.image_url.includes("cache")
-                                ? item.image_url.replace(/\/cache\/.*?\//, "/")
-                                : item.image_url
-                            }
+                            src={item.image_url.includes("cache") ? item.image_url.replace(/\/cache\/.*?\//, "/") : item.image_url}
                             alt={item.name || "Product"}
                             className={styles.item_image}
                           />
@@ -359,16 +406,12 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                       <p className={styles.item_sku}><strong>SKU:</strong> {item.sku}</p>
                     </div>
                     <button
-                      className={`${styles.delete_icon} ${
-                        deletingItemId === item.item_id ? styles.delete_icon_loading : ""
-                      }`}
+                      className={`${styles.delete_icon} ${deletingItemId === item.item_id ? styles.delete_icon_loading : ""}`}
                       onClick={() => !deletingItemId && deleteItem(item)}
                       disabled={!!deletingItemId}
                       aria-label="Remove item"
                     >
-                      {deletingItemId === item.item_id ? (
-                        <Spinner size={20} />
-                      ) : (
+                      {deletingItemId === item.item_id ? <Spinner size={20} /> : (
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="3 6 5 6 21 6"></polyline>
                           <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -388,6 +431,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                   </div>
                 </div>
               ))}
+
               {/* Order Summary */}
               <div className={styles.Order_CartOrderSummary_wrapper}>
                 <h3>Cart Order Summary</h3>
@@ -414,6 +458,7 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
                 </div>
               </div>
             </div>
+
             {/* Footer */}
             <div className={styles.cart_bag_footer}>
               <div className={styles.subtotal_section}>
@@ -439,26 +484,23 @@ function CartBag({ toggleCartBag, updateCartCount }: CartBagProps) {
             </div>
           </>
         )}
-        {/* Empty State */}
-        {!isLoading && cartItems.length === 0 && (
-          <div className={styles.cart_empty}>
-            <div className={styles.cart_empty_inner}>
-              <Image
-                src="/Images/emptyCart.png"
-                alt="Empty Cart"
-                width={150}
-                height={150}
-              />
-              <h3>Your Cart is Empty</h3>
-              <p>Add some items to your cart to see them here.</p>
-              <button onClick={handleShopRedirect} className={styles.shop_button}>
-                Start Shopping
-              </button>
-            </div>
-          </div>
-        )}
+
+{/* Empty State */}
+{!isLoading && cartItems.length === 0 && (
+  <div className={styles.cart_empty}>
+    <div className={styles.cart_empty_inner}>
+      <ShoppingCart size={160} strokeWidth={1.5} color="#999" />
+      <h3>Your Cart is Empty</h3>
+      <p>Add some items to your cart to see them here.</p>
+      <button onClick={handleShopRedirect} className={styles.shop_button}>
+        Start Shopping
+      </button>
+    </div>
+  </div>
+)}
       </div>
     </div>
   )
 }
+
 export default CartBag

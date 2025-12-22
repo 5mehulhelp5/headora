@@ -1122,7 +1122,9 @@ function ProductDetail({
               </div>
 
               {/* Offer Component */}
-              {stockStatus !== "OUT_OF_STOCK" && !loadingStockStatus && (
+
+
+              {/* {stockStatus !== "OUT_OF_STOCK" && !loadingStockStatus && (
                 <MakeAOffer
                   productID={Data?.id}
                   sku={currentVariant ? currentVariant.sku : Data?.sku}
@@ -1138,7 +1140,9 @@ function ProductDetail({
                     regularPrice()?.length == 0 ? "$0" : finalPrice()
                   }
                 />
-              )}
+              )} */}
+
+              
               {/* <button
                     className={styles.buyNow}
                     onClick={() => handleAddToCart(false)}

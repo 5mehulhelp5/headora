@@ -1006,20 +1006,55 @@
 }
 
 .addToCartButton {
-  padding: 7px;
-  color: #fff;
-  border: 1px solid #fff;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-size: 14px;
-  z-index: 1;
-  background-color: unset;
+  padding: 10px 18px;
   width: 80%;
   text-align: center;
-  text-decoration: none;
-  background-color: #1979c3;
-  border-radius: 20px;
 
+  color: #fff;
+  background-color: #1979c3;
+  border: 1px solid #1979c3;
+  border-radius: 2px;
+
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.addToCartButton:hover {
+  background-color: #145fa0;
+  border-color: #145fa0;
+  transform: translateY(-1px);
+}
+
+/* Active (click) */
+.addToCartButton:active {
+  transform: translateY(0);
+  background-color: #0f4c80;
+}
+
+/* Focus (accessibility) */
+.addToCartButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(25, 121, 195, 0.35);
+}
+
+/* Disabled state */
+.addToCartButton:disabled,
+.addToCartButton.disabled {
+  background-color: #b5c7d8;
+  border-color: #b5c7d8;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 /* .addToCartButton:hover {

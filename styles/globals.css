@@ -6555,3 +6555,16 @@ margin-bottom: 20px;
   66% {background-size: 20% 100%,20% 100%,20% 10% }
   100%{background-size: 20% 100%,20% 100%,20% 100%}
 }
+
+
+.body-no-scroll {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+}
+
+/* Optional: improve touch scrolling on mobile */
+.body-no-scroll {
+  touch-action: none;
+}
