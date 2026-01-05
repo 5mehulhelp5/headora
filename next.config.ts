@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     },
   },
   staticPageGenerationTimeout: 300000,
-  output: 'export',
+  // output: 'export',
   trailingSlash: false, // Ensures static files have .html
   
   images: {

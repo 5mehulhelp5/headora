@@ -6568,3 +6568,38 @@ margin-bottom: 20px;
 .body-no-scroll {
   touch-action: none;
 }
+
+
+
+
+
+
+
+
+
+/* HTML: <div class="loaderSpin"></div> */
+.loaderSpin {
+  width: 30px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid #0000;
+  border-right-color: #ffa60049;
+  position: relative;
+  animation: l24 1s infinite linear;
+}
+.loaderSpin:before,
+.loaderSpin:after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: inherit;
+  animation: inherit;
+  animation-duration: 2s;
+}
+.loaderSpin:after {
+  animation-duration: 4s;
+}
+@keyframes l24 {
+  100% {transform: rotate(1turn)}
+}

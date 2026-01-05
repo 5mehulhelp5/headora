@@ -50,6 +50,7 @@ function ProductDetail({
   const [quantity, setQuantity] = useState<any>(1);
   const [disabledOptions, setDisabledOptions] = useState<any>([]);
   const [selectedOptions, setSelectedOptions] = useState<any>({});
+  const [addedToCart, setAddedToCart] = useState(false)
 
   const [prevSelectedOptions, setPrevSelectedOptions] = useState<any>({});
   const [activeFilters, setActiveFilters] = useState<any>([]);
@@ -673,6 +674,7 @@ function ProductDetail({
         const result = await response.json();
 
         if (result.success) {
+          setAddedToCart(true)
           localStorage.setItem("cartCount", result.profile.cart_qty);
           localStorage.setItem("showcartBag", "true");
           window.dispatchEvent(new Event("storage"));
@@ -681,6 +683,7 @@ function ProductDetail({
             window.location.href = process.env.baseURL + "checkout/";
           }
         } else {
+          setAddedToCart(false)
           setMoadalHeading("Oops!");
           setmMadalMessage(
             result.errors.general_exception
@@ -1091,35 +1094,61 @@ function ProductDetail({
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className={styles.actionButtonsWrapper}>
-                {loadingStockStatus ? (
-                  <div className={styles.actionButtons}>
-                    <span className={styles.loadingButton}>
-                      Please wait...
-                    </span>
-                  </div>
-                ) : stockStatus === "OUT_OF_STOCK" ? (
-                  <div className={styles.actionButtons}>
-                    <span className={styles.outOfStockText}>Out of Stock</span>
-                  </div>
-                ) : addToLoading ? (
-                  <div className={styles.actionButtons}>
-                    <span className={styles.loadingButton}>
-                      Please wait...
-                    </span>
-                  </div>
-                ) : (
-                  <div className={styles.inlineActions}>
-                    <button
-                      className={styles.shopNow}
-                      onClick={() => handleAddToCart(false)}
-                    >
-                      Add To Cart
-                    </button>
-                  </div>
-                )}
-              </div>
+{/* Action Buttons */}
+<div className={styles.actionButtonsWrapper}>
+  {loadingStockStatus ? (
+    <div className={styles.actionButtons}>
+      {/* <span className={styles.loadingButton}>Please wait...</span> */}
+
+      <button
+            disabled
+        className={styles.shopNow}
+        onClick={() => handleAddToCart(false)}
+      >
+        Add To Cart
+      </button>
+
+    </div>
+  ) : stockStatus === "OUT_OF_STOCK" ? (
+    <div className={styles.actionButtons}>
+      <span className={styles.outOfStockText}>Out of Stock</span>
+    </div>
+  ) : addToLoading ? (
+    <div className={styles.actionButtons}>
+            <button
+            disabled
+        className={styles.shopNow}
+        onClick={() => handleAddToCart(false)}
+      >
+       <div className="loaderSpin"></div>
+      </button>
+
+      {/* <span className={styles.loadingButton}>Please wait...</span> */}
+    </div>
+  ) : addedToCart ? (
+    <div className={styles.inlineActions}>
+
+      <button
+        className={styles.shopNow}
+        style={{textDecoration: "underline"}}
+        // onClick={() => router.push("/cart")}
+      >
+        Go To Cart →
+      </button>
+
+
+    </div>
+  ) : (
+    <div className={styles.inlineActions}>
+      <button
+        className={styles.shopNow}
+        onClick={() => handleAddToCart(false)}
+      >
+        Add To Cart
+      </button>
+    </div>
+  )}
+</div>
 
               {/* Offer Component */}
 

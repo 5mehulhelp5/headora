@@ -132,7 +132,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     return category.children?.map((subCategory: { url_path: string }) => {
       let urlPath =subCategory.url_path.split('/')
       return {
-        params: { slug: urlPath[0],  slug2: urlPath[1]+".html" },
+        params: { slug: urlPath[0],  slug2: urlPath[1]+"" },
       };
     }) || [];
   });
@@ -147,22 +147,36 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 
 export const getStaticProps: GetStaticProps = async ({ params, query }: any) => {
+
+  const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
+
   const { slug,slug2 } = params as { slug: string ,slug2: string;};
   const urlPath=slug+'/'+slug2.replace(/\.html$/, '')
 
   //console.log('/////////////////////getStaticProps////////////slug2:-',urlPath)
   const cacheStaticProps= createHash('md5')
-    .update(urlPath+'.html')
+    .update(urlPath+'')
     .digest('hex')
+
+
+    // During build: Try cache first (fast, low load)
+    // During ISR/runtime: SKIP cache, always fetch fresh
+    let useCache = isBuildTime; // Only use cache at build time
+
+   
+      // Your existing cache check loop
+
+
     const cacheStaticPropsPath= path.resolve(`./cacheM/category/${cacheStaticProps}.json`)
-    
+      if (useCache) {
+
     try {
       let responseData= JSON.parse(await fs.readFile(cacheStaticPropsPath, 'utf-8'));
       return responseData;
     } catch (error) {
       
     }
-
+  }
   const client = new Client();
 
   // Handle slug and page from params and query
@@ -217,7 +231,8 @@ let productsRes = uid ? await fetchProductsByUID(uid, page) : null;
       currentPage: page,  
       productsRes,        
       collection,         
-    }
+    },
+    // revalidate: 30,
     }
     // await fs.writeFile(cacheStaticPropsPath, JSON.stringify(responseData));
     return responseData;
@@ -232,6 +247,7 @@ let productsRes = uid ? await fetchProductsByUID(uid, page) : null;
       productsRes: null,  
       collection: null,   
     },
+    revalidate: 30,
   };
 }
 };

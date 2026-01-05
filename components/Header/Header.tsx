@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import QuickSearch from "../Search/QuickSearch";
 
 function Header({ categoriesList,megamenu }: any) {
-  console.log(megamenu,"megamenu")
+  // console.log(megamenu,"megamenu")
   const [isSearchOpen, setSearchOpen] = useState<boolean>(false); // New state for search input
   const [searchText, setSearchText] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any>(); // Store search results
@@ -71,7 +71,7 @@ function Header({ categoriesList,megamenu }: any) {
             
         const data = megamenu?.data
         // const data:any = []
-console.log(data,"data")
+// console.log(data,"data")
         if (data){
      
 
@@ -254,7 +254,7 @@ const refinedCategories = (categories || []).map((category: any) => {
     setIsDropdownOpen(false);
   };
 
-  console.log(refinedCategories, 'refinedCategories')
+  // console.log(refinedCategories, 'refinedCategories')
   return (
     <nav className={styles.navbar}>
       <header className={styles.header}>
@@ -314,7 +314,7 @@ const refinedCategories = (categories || []).map((category: any) => {
                   category.children.length < 5 ? { position: "relative" } : { position: "unset" }
                 }
               >
-                <Link href={`/${category.url_path}.html`}>{category.name}</Link>
+                <Link href={`/${category.url_path}`}>{category.name}</Link>
 
                 <>
                   {category.children.length > 0 && (
@@ -359,7 +359,7 @@ const refinedCategories = (categories || []).map((category: any) => {
                               className={styles.categoryColumn}
                             >
                               <span className={styles.categoryTitle}>
-                                <Link href={`/${subCategory.url_path}.html`}>{subCategory.name}</Link>
+                                <Link href={`/${subCategory.url_path}`}>{subCategory.name}</Link>
                               </span>
 
                               {subCategory.children?.length > 0 && (
@@ -380,7 +380,7 @@ const refinedCategories = (categories || []).map((category: any) => {
                                           {category.name.toLowerCase() !==
                                             "brands" ? (
                                             <Link
-                                              href={`/${subSubCategory.url_path}.html`}
+                                              href={`/${subSubCategory.url_path}`}
                                             >
                                               {subSubCategory.name}
                                             </Link>
@@ -393,7 +393,7 @@ const refinedCategories = (categories || []).map((category: any) => {
 
                                   {subCategory.children.length > 4 && (
                                     <li className={styles.viewAllLink}>
-                                      <Link href={`/${subCategory.url_path}.html`}>
+                                      <Link href={`/${subCategory.url_path}`}>
                                         View All
                                       </Link>
                                     </li>
@@ -445,7 +445,7 @@ const refinedCategories = (categories || []).map((category: any) => {
                                 className={styles.categoryColumn}
                               >
                                 <span className={styles.categoryTitle}>
-                                  <Link href={`/${subCategory.url_path}.html`}>
+                                  <Link href={`/${subCategory.url_path}`}>
                                     {subCategory.name}
                                   </Link>
                                 </span>
@@ -468,7 +468,7 @@ const refinedCategories = (categories || []).map((category: any) => {
                                             {category.name.toLowerCase() !==
                                               "brands" ? (
                                               <Link
-                                                href={`/${subSubCategory.url_path}.html`}
+                                                href={`/${subSubCategory.url_path}`}
                                               >
                                                 {subSubCategory.name}
                                               </Link>
@@ -485,7 +485,7 @@ const refinedCategories = (categories || []).map((category: any) => {
 
                                     {subCategory.children.length > 4 && (
                                       <li className={styles.viewAllLink}>
-                                        <Link href={`/${subCategory.url_path}.html`}>
+                                        <Link href={`/${subCategory.url_path}`}>
                                           View All
                                         </Link>
                                       </li>

@@ -234,6 +234,8 @@ const ProductSchema = ({ product, aggregations, schemaImage, price, metaDiscript
 // ==========================================Static Paths =======================================
 
 export const getStaticPaths: GetStaticPaths = async () => {
+
+
   const client = new Client();
   const allCategoriesPathFile = path.resolve(`./cacheM/topLevelCategoriesPath.json`);
   const allProductsPathFile = path.resolve(`./cacheM/allProductsPath.json`);
@@ -249,7 +251,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     });
    let responseData = {
     paths,
-    fallback: false,
+    fallback: 'blocking' as const,
   }
 
   return responseData;
@@ -265,7 +267,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
             // Ensure the slug is an array of values
             return {
               params: {
-                slug: item.url_path+'.html', // Split slug by '/' to get an array (e.g., ['product', 'green-t-shirt'])
+                slug: item.url_path+'', // Split slug by '/' to get an array (e.g., ['product', 'green-t-shirt'])
               },
             };
           });
@@ -273,14 +275,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
         
     let responseData = {
           paths,
-          fallback: false,
+          fallback: 'blocking' as const,
         }
    
     return responseData;
   } catch (error) {
     return {
       paths: [],
-      fallback: false,
+      fallback:'blocking' as const,
     };
   }
 }
@@ -288,16 +290,27 @@ export const getStaticPaths: GetStaticPaths = async () => {
 // Static Props
 export const getStaticProps: GetStaticProps = async ({params, query}:any) => {
   
+
+  // console.log("VERIFY--->"+process.env.NEXT_PHASE,"<-...process.env.NEXT_PHASE")
+
+  const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
+  
   const { slug } = params as { slug: string;};
   const urlPath=slug.replace(/\.html$/, '')
   console.log('/////////////////////getStaticProps////////////slug1:-',urlPath)
   const cacheStaticProps= createHash('md5')
-  .update(urlPath+'.html')
+  .update(urlPath+'')
   .digest('hex');
 
+// During build: Try cache first (fast, low load)
+    // During ISR/runtime: SKIP cache, always fetch fresh
+    let useCache = isBuildTime; // Only use cache at build time
 
-  const cacheStaticPropsPath= path.resolve(`./cacheM/category/${cacheStaticProps}.json`)
+   
+      // Your existing cache check loop
+  // const cacheStaticPropsPath= path.resolve(`./cacheM/category/${cacheStaticProps}.json`)
   const cacheProductPropsPath= path.resolve(`./cacheM/product/${cacheStaticProps}.json`)
+  if (useCache) {
     const cachePaths = [
      // path.resolve(`./cacheM/category/${cacheStaticProps}.json`),
       path.resolve(`./cacheM/product/${cacheStaticProps}.json`)
@@ -314,8 +327,8 @@ export const getStaticProps: GetStaticProps = async ({params, query}:any) => {
        
       }
     }
+  }
   
-
   const client = new Client();
   
   const page = query?.page ? parseInt(query.page as string, 10) : 1; // Get page from query or default to 1
@@ -371,14 +384,16 @@ try {
       currentPage: page,  
       productsRes,        
       collection,   
+      generatedAt: new Date().toISOString(),
       view:'collection',
       urlPath:urlPath
     
-    }
+    },
+    revalidate: 10,
   }
 
 
-  await fs.writeFile(cacheStaticPropsPath, JSON.stringify(responseData));
+  // await fs.writeFile(cacheStaticPropsPath, JSON.stringify(responseData));
   return responseData;
   }else{
     console.log(urlPath,"RUNNNN 3")
@@ -401,8 +416,11 @@ try {
         reviews,
         ReturnDataCMSBlock,  
         view:'product',
-        urlPath:urlPath 
+        generatedAt: new Date().toISOString(),
+        urlPath:urlPath,
+        check:useCache
       },
+      revalidate: 10,
     }
     
     await fs.writeFile(cacheProductPropsPath, JSON.stringify(responseData));
@@ -417,16 +435,18 @@ try {
       currentPage: page,  
       productsRes: null,  
       collection: null,   
+      generatedAt: new Date().toISOString(),
       view:'ERROR',
     },
+    revalidate: 10,
   };
 }
 };
 
 // Collection Component
-const Collection = ({ view,urlPath,allProductList, category, productsRes, collection,categories,productData, aggregations, reviews, ReturnDataCMSBlock, categoriesList, showRibbon, isMobile}: any) => {
+const Collection = ({ check,view,urlPath,allProductList, category, productsRes, collection,categories,productData, aggregations, reviews, ReturnDataCMSBlock, categoriesList, showRibbon, isMobile,generatedAt}: any) => {
 
-console.log(view,"viewviewview")
+console.log(view,check,"viewviewview")
 
   const [price, setPrice] = useState<any>()
   const [productBbreadcrumbs, setProductBbreadcrumbs] = useState<any>([]);
@@ -597,7 +617,8 @@ const breadcrumbsProducts = [
         <div style={{position:'relative'
         }}>
           <CategoryHeader Data={{ name: category?.name, description:category?.short_description }} categories={categories}/>
-       
+          <p>generatedAt: {generatedAt}</p>
+          <p>generatedAt: {generatedAt}+process.env.NEXT_PHASE,"process.env.NEXT_PHASE"</p>
           <CategoriesProducts
             Data={{ name: category?.name }}
             categoryDetail={category}
@@ -606,6 +627,7 @@ const breadcrumbsProducts = [
             showRibbon={showRibbon}
             isMobile={isMobile}
           />
+          
           <Content description={category?.description} />
           </div>
         </>
@@ -677,7 +699,9 @@ const breadcrumbsProducts = [
         {/* <ProductSchema product={productData} aggregations={aggregations} schemaImage={schemaImage} price={price} metaDiscription={metaDiscription} /> */}
        
         <BreadcrumbSchema breadcrumbs={breadcrumbsProducts} products={productData} />
+        <p>generatedAt: {generatedAt}+process.env.NEXT_PHASE,"process.env.NEXT_PHASE"</p>
         <ProductSchema product={productData} aggregations={aggregations} schemaImage={schemaImage} price={price} metaDiscription={metaDiscription} />
+        
         <ProductDetail 
         Data={productData} 
         aggregations={aggregations} 
@@ -687,6 +711,8 @@ const breadcrumbsProducts = [
         ReturnDataCMSBlock={ReturnDataCMSBlock}
         showRibbon={showRibbon}/>
           {/* <StaticReview /> */}
+        <p>generatedAt: {generatedAt}+{process.env.NEXT_PHASE},"process.env.NEXT_PHASE"</p>
+
         <ReviewSection Data={productData} AllReviews={reviews} />
         <CrossSellProducts Data={productData}/>
         <UpSellProducts Data={productData}/>

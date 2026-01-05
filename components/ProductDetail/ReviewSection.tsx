@@ -26,7 +26,7 @@ function ReviewSection({ Data, AllReviews }: any) {
         setReviewSubmitted(false);
       }
     }
-  }, [Data.sku]);
+  }, [Data?.sku]);
 
   const handleRatingClick = (categoryId: string, value: number, valueId: string) => {
     setReviewRatings((prevRatings: any) => ({
@@ -46,7 +46,6 @@ function ReviewSection({ Data, AllReviews }: any) {
     const ValueValue = reviewRatings[ValueLabel]?.valueId || "";
     const PriceLabel = Object.keys(reviewRatings)[2] || "";
     const PriceValue = reviewRatings[PriceLabel]?.valueId || "";
-    //console.log('fetchReviewSection')
     const response = await client.fetchReviewSection(
       SKU,
       reviewNickname,
@@ -84,7 +83,7 @@ function ReviewSection({ Data, AllReviews }: any) {
     return totalAverageRating / reviews.length / 20;
   };
 
-  const reviews = Data.reviews?.items || [];
+  const reviews = Data?.reviews?.items || [];
   const overallRating = calculateOverallRating(reviews);
 
   if (reviews.length === 0) {
