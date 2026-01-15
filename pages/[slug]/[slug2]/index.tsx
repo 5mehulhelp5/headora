@@ -101,8 +101,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
       const paths = allCategories.map((url: any) => {
         let urlPath = url.split('/');
         return { params: { 
-              slug: urlPath[0] || '',
-              slug2: urlPath[1] || ''
+              slug: urlPath[0].replace(/\.html$/, '') || '',
+              slug2: urlPath[1].replace(/\.html$/, '') || ''
             } 
           }  // Single segment case
            
