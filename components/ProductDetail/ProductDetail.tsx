@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "../../styles/ProductDetail.module.css";
 import { Currency } from "../Currency/currency";
@@ -34,11 +33,11 @@ function ProductDetail({
   Data,
   aggregations,
   categories,
-  breadcrumbs,
+  // breadcrumbs,
   ReturnDataCMSBlock,
   showRibbon
 }: any) {
-  // console.log(Data,'Data')
+
   if (!Data) return null;
   const router = useRouter();
 
@@ -50,7 +49,6 @@ function ProductDetail({
   const [quantity, setQuantity] = useState<any>(1);
   const [disabledOptions, setDisabledOptions] = useState<any>([]);
   const [selectedOptions, setSelectedOptions] = useState<any>({});
-  const [addedToCart, setAddedToCart] = useState(false)
 
   const [prevSelectedOptions, setPrevSelectedOptions] = useState<any>({});
   const [activeFilters, setActiveFilters] = useState<any>([]);
@@ -69,7 +67,7 @@ function ProductDetail({
 
   const [affirmShow, setAffirmShow] = useState<any>(false);
   const [affirmPrice, setAffirmPrice] = useState<any>("");
-  const [brandname, setBrandname] = useState<any>("Headora");
+  const [brandname, setBrandname] = useState<any>("DSH");
   const [stockStatus, setStockStatus] = useState(null);
   const [loadingStockStatus, setLoadingStockStatus] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
@@ -85,6 +83,28 @@ function ProductDetail({
   const [showModal, setShowModal] = useState<any>(false)
   const [modalHeading, setModalHeading] = useState<any>("")
   const [modalMessage, setModalMessage] = useState<any>("")
+  const [breadcrumbs, setBreadcrumbs] = useState<any>([]);
+
+  useEffect(() => {
+
+    // Retrieve breadcrumbs data from sessionStorage on the first render
+    if (typeof window !== 'undefined') {
+      const storedBreadcrumbs = sessionStorage.getItem('breadcrumbs');
+      if (storedBreadcrumbs) {
+        setBreadcrumbs(JSON.parse(storedBreadcrumbs));
+        // Clear breadcrumbs from sessionStorage
+        // sessionStorage.removeItem('breadcrumbs');
+      }
+    }
+  }, []);
+
+
+  const scrollToBottom = useCallback(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // smooth scroll effect
+    });
+  }, []);
   // Wishlist Functionality
   const syncWishlistItems = async () => {
     if (!userLoggedIn) return
@@ -674,16 +694,17 @@ function ProductDetail({
         const result = await response.json();
 
         if (result.success) {
-          setAddedToCart(true)
           localStorage.setItem("cartCount", result.profile.cart_qty);
           localStorage.setItem("showcartBag", "true");
           window.dispatchEvent(new Event("storage"));
+          // NEW: Proper same-tab communication
+          window.dispatchEvent(new CustomEvent("openCartBag"));
+
           setAddToLoading(false);
           if (redirect) {
             window.location.href = process.env.baseURL + "checkout/";
           }
         } else {
-          setAddedToCart(false)
           setMoadalHeading("Oops!");
           setmMadalMessage(
             result.errors.general_exception
@@ -749,7 +770,7 @@ function ProductDetail({
     if (regular_price) {
       let saving = regular_price - final_price;
       if (saving > 0) {
-        return `You will save $${formatPrice(saving)}`;
+        return `You save $${formatPrice(saving)}`;
       }
     }
 
@@ -798,6 +819,16 @@ function ProductDetail({
     (option: any) => option?.count === 1
   );
 
+  const toSlug = (text: string) => {
+    return text
+      .replace(".html", "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-");
+  };
+
   return (
     <>
       <div className={styles.navBarSpace}></div>
@@ -819,14 +850,29 @@ function ProductDetail({
       )}
 
       <div className={styles.detailContainer}>
-   <div className={styles.cartegoryHeadeBreadcrumbs}>
+        {/* <nav className={styles.breadcrumb}>
+        {breadcrumbs.length === 0 && (
+          <Link href={'/'} style={{  borderRight: 'black 1px solid', padding: '0 10px 0px 0px'}}>Home</Link>
+        )}
+        {breadcrumbs.map((crumb: any, index: number) => (
+          <React.Fragment key={index}>
+             <Link href={crumb.path}>
+              <span>{crumb.name}</span>
+            </Link>
+          </React.Fragment>
+        ))}
+           <span style={{ borderRight: 'unset' }}>{displayName}</span>
+      </nav> */}
+
+
+<div className={styles.cartegoryHeadeBreadcrumbs}>
           {/* Render Home link if no breadcrumbs are available */}
               {breadcrumbs.length === 0 && (
             <>
               <Link href="/" style={{}}>
                 Home
               </Link>
-              <span>/</span>
+              {/* <span>/</span>
               <Link
                 href={`${Data?.categories?.[0]?.name === "brands" && Data?.categories?.[0]?.url_key
                     ? Data?.categories?.[0]?.url_key
@@ -839,28 +885,52 @@ function ProductDetail({
                     Data?.categories?.[0]?.name
                     ? Data?.categories?.[0]?.name
                     : Data?.categories?.[0]?.name || ""}
-              </Link>
+              </Link> */}
+              
 
               <span>/</span>
               {/* <span className={styles.ProductDisplayName}>{displayName}</span> */}
+              
             </>
-          )}
-
-          {/* Map through breadcrumbs */}
-          {breadcrumbs.map((crumb: any, index: number) => (
+            )}
+              {/* Map through breadcrumbs */}
+          {/* {breadcrumbs.map((crumb: any, index: number) => (
             <React.Fragment key={index}>
-              <Link href={crumb.path}>{crumb.name.replace(".html", "").length > 60
+              <Link href={crumb.path == "/" ? crumb.path : crumb.name.replace(".html", "")+'.html'} >{crumb.name.replace(".html", "").length > 60
                 ? crumb.name.replace(".html", "").slice(0, 57) + "..."
                 : crumb.name.replace(".html", "")}
               </Link>
 
               { <span>/</span>}
             </React.Fragment>
-          ))}
+          ))} */}
+          {breadcrumbs.map((crumb: any, index: number) => {
+            const path =
+              index === 0
+                ? "/"
+                : "/" +
+                  breadcrumbs
+                    .slice(1, index + 1)
+                    .map((c: any) => toSlug(c.name))
+                    .join("/");
+
+            return (
+              <React.Fragment key={index}>
+                <Link href={path}>
+                  {crumb.name.replace(".html", "").length > 60
+                    ? crumb.name.replace(".html", "").slice(0, 57) + "..."
+                    : crumb.name.replace(".html", "")}
+                </Link>
+                <span>/</span>
+              </React.Fragment>
+            );
+          })}
+
 
           {/* Display the last breadcrumb as a styled span */}
           <span className={styles.ProductDisplayName}>{displayName}</span>
         </div>
+
 
         <div className={styles.productDetail}>
           {/* Brand, Review and Product Name Repeat For Mobile View */}
@@ -912,9 +982,10 @@ function ProductDetail({
           <div className={`${styles.priceTitleWrapper} ${styles.mobileBlock}`}>
             <div className={`${styles.subTitelWrapper}`}>
               <h1 className={styles.mobileViewProductTitle}>
-                {Data.__typename === "ConfigurableProduct"
+                {/* {Data.__typename === "ConfigurableProduct"
                   ? currentVariant?.variant_name || Data?.name
-                  : Data?.name}
+                  :  */}
+                  {Data?.name}
               </h1>
             </div>
           </div>
@@ -977,13 +1048,16 @@ function ProductDetail({
             >
               <div className={styles.subTitelWrapper}>
                 <h1>
-                  {Data.__typename === "ConfigurableProduct"
+                  {/* {Data.__typename === "ConfigurableProduct"
                     ? currentVariant?.variant_name || Data?.name
-                    : Data?.name}
+                    :
+                     Data?.name} */}
+                    { Data?.name}
                 </h1>
               </div>
+              <p onClick={scrollToBottom} className={styles.paymentInfo} style={{ cursor: 'pointer' }}>Be the first to review this product</p>
               <p className={styles.paymentInfo}>
-                <b>SKU:</b> {currentVariant ? currentVariant.sku : Data?.sku}
+                <b>Item #:</b> {currentVariant ? currentVariant.sku : Data?.sku}
                 {isMounted && (
                   <span className={styles.tooltipWrapper}>
                     <span className={styles.tooltipIcon}>?</span>
@@ -996,17 +1070,24 @@ function ProductDetail({
                           competitors.
                         </div>
                         <div className={styles.tooltipTitle}>CONTACT OUR CONCIERGE</div>
-                        <div className={styles.tooltipText}>support@Headora.com or 1-800-690-3736.</div>
+                        <div className={styles.tooltipText}>support@DSH.com or 1-800-690-3736.</div>
                       </div>
                     </div>
                   </span>
                 )}
               </p>
-              <p className={styles.price}>
+
+              <div className={styles.price}>
                 <span className={styles.special}>{finalPrice()}</span>
                 <span className={styles.regular}>{regularPrice()}</span>
-                <p className={styles.AnticipatedDeliveryText}>Anticipated Delivery: {leadTimeOption?.label || "3 - 4 Week"} </p>
-              </p>
+                {savingPrice() && (
+                  <span className={styles.mobilePriceDiscount}>
+                    {savingPrice()}
+                  </span>
+                )}
+                {/* <p className={styles.AnticipatedDeliveryText}>Anticipated Delivery: {leadTimeOption?.label || "3 - 4 Week"} </p> */}
+              </div>
+             
             </div>
 
             {Data?.__typename === "ConfigurableProduct" && (
@@ -1016,10 +1097,12 @@ function ProductDetail({
                 {Data?.configurable_options?.map((option: any) => (
                   <>
                     <AttributeSlider
+                      aggregations={aggregations}
                       option={option}
                       handleOptionSelect={handleOptionSelect}
                       disabledOptions={disabledOptions}
                       activeFilters={activeFilters}
+                      selectedOptions={selectedOptions}
                     />
                   </>
                 ))}
@@ -1094,65 +1177,37 @@ function ProductDetail({
                 </div>
               )}
 
-{/* Action Buttons */}
-<div className={styles.actionButtonsWrapper}>
-  {loadingStockStatus ? (
-    <div className={styles.actionButtons}>
-      {/* <span className={styles.loadingButton}>Please wait...</span> */}
-
-      <button
-            disabled
-        className={styles.shopNow}
-        onClick={() => handleAddToCart(false)}
-      >
-        Add To Cart
-      </button>
-
-    </div>
-  ) : stockStatus === "OUT_OF_STOCK" ? (
-    <div className={styles.actionButtons}>
-      <span className={styles.outOfStockText}>Out of Stock</span>
-    </div>
-  ) : addToLoading ? (
-    <div className={styles.actionButtons}>
-            <button
-            disabled
-        className={styles.shopNow}
-        onClick={() => handleAddToCart(false)}
-      >
-       <div className="loaderSpin"></div>
-      </button>
-
-      {/* <span className={styles.loadingButton}>Please wait...</span> */}
-    </div>
-  ) : addedToCart ? (
-    <div className={styles.inlineActions}>
-
-      <button
-        className={styles.shopNow}
-        style={{textDecoration: "underline"}}
-        // onClick={() => router.push("/cart")}
-      >
-        Go To Cart →
-      </button>
-
-
-    </div>
-  ) : (
-    <div className={styles.inlineActions}>
-      <button
-        className={styles.shopNow}
-        onClick={() => handleAddToCart(false)}
-      >
-        Add To Cart
-      </button>
-    </div>
-  )}
-</div>
+              {/* Action Buttons */}
+              <div className={styles.actionButtonsWrapper}>
+                {loadingStockStatus ? (
+                  <div className={styles.actionButtons}>
+                    <span className={styles.loadingButton}>
+                      Please wait...
+                    </span>
+                  </div>
+                ) : stockStatus === "OUT_OF_STOCK" ? (
+                  <div className={styles.actionButtons}>
+                    <span className={styles.outOfStockText}>Out of Stock</span>
+                  </div>
+                ) : addToLoading ? (
+                  <div className={styles.actionButtons}>
+                    <span className={styles.loadingButton}>
+                      Please wait...
+                    </span>
+                  </div>
+                ) : (
+                  <div className={styles.inlineActions}>
+                    <button
+                      className={styles.shopNow}
+                      onClick={() => handleAddToCart(false)}
+                    >
+                      Add To Cart
+                    </button>
+                  </div>
+                )}
+              </div>
 
               {/* Offer Component */}
-
-
               {/* {stockStatus !== "OUT_OF_STOCK" && !loadingStockStatus && (
                 <MakeAOffer
                   productID={Data?.id}
@@ -1170,8 +1225,6 @@ function ProductDetail({
                   }
                 />
               )} */}
-
-              
               {/* <button
                     className={styles.buyNow}
                     onClick={() => handleAddToCart(false)}
@@ -1183,7 +1236,9 @@ function ProductDetail({
 
 
             <ul className={styles.productFeatures}>
-              <li>
+
+
+                <li>
                 <Image
                   height={50}
                   width={50}
@@ -1225,7 +1280,7 @@ function ProductDetail({
                 />
                 <p>
                   Speak to an expert{" "}
-                  <Link href="tel:+1 888 635 6174"> +1 (800) 690-3736</Link>
+                  <Link href="tel:6234556258"> 623.455.6258</Link>
                 </p>
               </li>
               <li>
@@ -1235,10 +1290,61 @@ function ProductDetail({
                   src="/Images/ruler.png"
                   alt="Ruler"
                 />
-                <Link href={`${process.env.baseURL}Watch Size Guides.pdf`} target="_blank">
-                  <p>See Watch size guide</p>
+                <Link href={`${process.env.baseURL}/#`} target="_blank">
+                  <p>Content Guide</p>
                 </Link>
-              </li>
+              </li> 
+
+
+              <div className={styles.SharedSocialMediaIcons}>
+                {/* <Link href={`sendfriend/product/send/id/${Data?.id}/`}>
+                  <Image src={"Images/envelope-icon.png"} alt="mail Icons" width={22} height={18} />
+                </Link> */}
+                <Link
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(generateProductUrl())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Facebook"
+                >
+                  <div className={styles.socialIcon}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                  </div>
+                </Link>
+                <Link
+                  href={`https://x.com/intent/post?url=${encodeURIComponent(generateProductUrl())}&text=${encodeURIComponent(getProductName())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Twitter/X"
+                >
+                  <div className={styles.socialIcon}>
+                    <Image src={'/Images/x.png'} height={16} width={16} alt={"x icon"} />
+                  </div>
+                </Link>
+                {/* <Link
+                  href={`https://plus.google.com/share?url=${encodeURIComponent(generateProductUrl())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Google Plus"
+                >
+                  <div className={styles.socialIcon}>
+                    <Image src={"/Images/GPlusSocial.png"} alt="G Plus" height={20} width={24} />
+                  </div>
+                </Link> */}
+
+                <Link
+                  href={`https://in.pinterest.com/pin-builder/?description=${encodeURIComponent(getProductName())}&media=${encodeURIComponent(getProductImageUrl() || "")}&url=${encodeURIComponent(generateProductUrl())}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on Pinterest"
+                >
+                  <div className={styles.socialIcon}>
+                    <Image src={'/Images/pinterest-icon.png'} height={20} width={20} alt={"p icon"} />
+                  </div>
+                </Link>
+              </div>
+             
               {/*  <li>
                 <Image
                   height={50}
@@ -1291,49 +1397,26 @@ function ProductDetail({
                 <p className={styles.wishlist}>Wishlist</p>
               </Link>
             </div> */}
-            <ShortDescriptionNavBars
+
+            {/* <ShortDescriptionNavBars
+              currentVariant={currentVariant ? currentVariant : Data}
+              configurableOptions={Data?.configurable_options}
+              Data={Data}
+              aggregations={aggregations}
+              ReturnDataCMSBlock={ReturnDataCMSBlock}
+            /> */}
+
+          </div>
+
+
+        </div>
+        <ShortDescriptionNavBars
               currentVariant={currentVariant ? currentVariant : Data}
               configurableOptions={Data?.configurable_options}
               Data={Data}
               aggregations={aggregations}
               ReturnDataCMSBlock={ReturnDataCMSBlock}
             />
-            <div className={styles.SharedSocialMediaIcons}>
-              <Link
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(generateProductUrl())}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Share on Facebook"
-              >
-                <div className={styles.socialIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                  </svg>
-                </div>
-              </Link>
-              <Link
-                href={`https://x.com/intent/post?url=${encodeURIComponent(generateProductUrl())}&text=${encodeURIComponent(getProductName())}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Share on Twitter/X"
-              >
-                <div className={styles.socialIcon}>
-                  <Image src={'/Images/x.png'} height={16} width={16} alt={"x icon"} />
-                </div>
-              </Link>
-              <Link
-                href={`https://in.pinterest.com/pin-builder/?description=${encodeURIComponent(getProductName())}&media=${encodeURIComponent(getProductImageUrl() || "")}&url=${encodeURIComponent(generateProductUrl())}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Share on Pinterest"
-              >
-                <div className={styles.socialIcon}>
-                  <Image src={'/Images/pinterest-icon.png'} height={20} width={20} alt={"p icon"} />
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div id="reviewssection"></div>
